@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->timestamp('month');
             $table->integer('year');
+            $table->integer('room_code')->nullable()->unique();
             $table->decimal('water_usage', 10, 2);  // Assuming 2 decimal places
             $table->decimal('electricity_usage', 10, 2);
             $table->decimal('other', 10, 2);

@@ -23,6 +23,7 @@ class UtilityUsageFactory extends Factory
             'water_usage' => $this->faker->randomFloat(2, 0, 100),
             'electricity_usage' => $this->faker->randomFloat(2, 0, 1000),
             'other' => $this->faker->randomFloat(2, 0, 50),
+            'room_code' => $this->faker->unique()->numberBetween(100000, 999999),
         ];
     }
 }

@@ -11,7 +11,6 @@ class RoomDetail extends Model
     protected $fillable = [
         'floor',
         'landlord_id',
-        'utility_id',
         'room_number',
         'water_price',
         'electricity_price',
@@ -26,12 +25,6 @@ class RoomDetail extends Model
         'electricity_price' => 'decimal:2',
         'room_price' => 'decimal:2',
     ];
-
-    // Relationship with LandlordDetail
-    public function landlord()
-    {
-        return $this->belongsTo(LandlordDetail::class, 'landlord_id');
-    }
 
     // Relationship with RentalDetail (if you have this model)
     public function rentals()

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('phone_number');
             $table->string('profile_picture')->nullable();
             $table->string('id_card_picture')->nullable();
-            $table->string('join_code')->nullable();
+            $table->string('join_code')->nullable()->unique();
             $table->enum('user_type', ['renter', 'landlord']);
             $table->timestamps();
         });

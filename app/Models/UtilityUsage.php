@@ -13,6 +13,7 @@ class UtilityUsage extends Model
         'month',
         'year',
         'water_usage',
+        'room_code',
         'electricity_usage',
         'other',
     ];
@@ -28,7 +29,7 @@ class UtilityUsage extends Model
     // Relationship with InvoiceDetail
     public function invoice()
     {
-        return $this->hasOne(InvoiceDetail::class, 'current_usage_id');
+        return $this->hasOne(InvoiceDetail::class, 'usage_id');
     }
 
     // Accessor to get total usage

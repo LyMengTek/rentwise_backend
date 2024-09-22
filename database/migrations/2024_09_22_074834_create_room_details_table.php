@@ -17,9 +17,6 @@ return new class extends Migration
             $table->foreignId('user_id')
             ->constrained('user_details')
             ->onDelete('cascade');
-            $table->foreignId('utility_id')
-                ->constrained('utility_usages')
-                ->onDelete('cascade');
             $table->string('room_number');
             $table->decimal('water_price', 10, 2);
             $table->decimal('electricity_price', 10, 2);
