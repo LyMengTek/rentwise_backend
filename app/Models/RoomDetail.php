@@ -29,12 +29,6 @@ class RoomDetail extends Model
         return $this->belongsTo(LandlordDetail::class, 'landlord_id');
     }
 
-    // Relationship with UtilityDetail
-    public function utility()
-    {
-        return $this->belongsTo(UtilityUsage::class, 'utility_id');
-    }
-
     // Relationship with RentalDetail (if you have this model)
     public function rentals()
     {
