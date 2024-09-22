@@ -17,6 +17,9 @@ return new class extends Migration
             $table->foreignId('landlord_id')
                 ->constrained('landlord_details')
             ->onDelete('cascade');
+            $table->foreignId('utility_id')
+                ->constrained('utility_usages')
+                ->onDelete('cascade');
             $table->string('room_number');
             $table->boolean('available')->default(true);
             $table->decimal('room_price', 10, 2);

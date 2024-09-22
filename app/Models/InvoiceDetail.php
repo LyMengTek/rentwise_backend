@@ -11,8 +11,7 @@ class InvoiceDetail extends Model
 
     protected $fillable = [
         'user_id',
-        'current_usage_id',
-        'previous_usage_id',
+        'usage_id',
         'amount_due',
         'due_date',
         'paid',
@@ -31,15 +30,9 @@ class InvoiceDetail extends Model
     }
 
     // Relationship with CurrentUtilityUsage
-    public function currentUsage()
+    public function Usage()
     {
-        return $this->belongsTo(CurrentUtilityUsage::class, 'current_usage_id');
-    }
-
-    // Relationship with PreviousUtilityUsage
-    public function previousUsage()
-    {
-        return $this->belongsTo(PreviousUtilityUsage::class, 'previous_usage_id');
+        return $this->belongsTo(UtilityUsage::class, 'usage_id');
     }
 
     // Relationship with RentalDetail

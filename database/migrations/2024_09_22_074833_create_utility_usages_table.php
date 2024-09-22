@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('current_utility_usages', function (Blueprint $table) {
+        Schema::create('utility_usages', function (Blueprint $table) {
             $table->id();
             $table->timestamp('month');
             $table->integer('year');

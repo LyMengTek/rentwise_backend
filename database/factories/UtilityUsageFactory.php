@@ -3,19 +3,18 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\PreviousUtilityUsage;
-
+use App\Models\UtilityUsage;
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\PreviousUtilityUsage>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\UtilityUsage>
  */
-class PreviousUtilityUsageFactory extends Factory
+class UtilityUsageFactory extends Factory
 {
     /**
      * Define the model's default state.
      *
      * @return array<string, mixed>
      */
-    protected $model = PreviousUtilityUsage::class;
+    protected $model = UtilityUsage::class;
     public function definition(): array
     {
         return [

@@ -11,7 +11,7 @@ class RoomDetail extends Model
     protected $fillable = [
         'floor',
         'landlord_id',
-        'room_type_id',
+        'utility_id',
         'room_number',
         'available',
         'room_price',
@@ -29,10 +29,10 @@ class RoomDetail extends Model
         return $this->belongsTo(LandlordDetail::class, 'landlord_id');
     }
 
-    // Relationship with RoomtypeDetail
-    public function roomType()
+    // Relationship with UtilityDetail
+    public function utility()
     {
-        return $this->belongsTo(RoomtypeDetail::class, 'room_type_id');
+        return $this->belongsTo(UtilityUsage::class, 'utility_id');
     }
 
     // Relationship with RentalDetail (if you have this model)

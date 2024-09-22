@@ -7,8 +7,7 @@ use Illuminate\Database\Seeder;
 use App\Models\UserDetail;
 use App\Models\LandlordDetail;
 use App\Models\RoomDetail;
-use App\Models\CurrentUtilityUsage;
-use App\Models\PreviousUtilityUsage;
+use App\Models\UtilityUsage;
 use App\Models\InvoiceDetail;
 use App\Models\RentalDetail;
 
@@ -29,10 +28,7 @@ class DatabaseSeeder extends Seeder
         RoomDetail::factory()->count(15)->create();
 
         // Create CurrentUtilityUsages (15, one for each room)
-        CurrentUtilityUsage::factory()->count(15)->create();
-
-        // Create PreviousUtilityUsages (15, one for each room)
-        PreviousUtilityUsage::factory()->count(15)->create();
+        UtilityUsage::factory()->count(15)->create();
 
         // Create InvoiceDetails (20, allowing for some rooms to have multiple invoices)
         InvoiceDetail::factory()->count(20)->create();
