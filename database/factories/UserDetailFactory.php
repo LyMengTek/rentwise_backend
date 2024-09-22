@@ -26,6 +26,7 @@ class UserDetailFactory extends Factory
             'profile_picture' => $this->faker->imageUrl(),
             'id_card_picture' => $this->faker->imageUrl(),
             'user_type' => $this->faker->randomElement(['renter', 'landlord']),
+            'join_code' => $this->faker->boolean ? null : $this->faker->unique()->numberBetween(100000, 999999),
         ];
     }
 }

@@ -14,13 +14,15 @@ return new class extends Migration
         Schema::create('room_details', function (Blueprint $table) {
             $table->id();
             $table->integer('floor');
-            $table->foreignId('landlord_id')
-                ->constrained('landlord_details')
+            $table->foreignId('user_id')
+            ->constrained('user_details')
             ->onDelete('cascade');
             $table->foreignId('utility_id')
                 ->constrained('utility_usages')
                 ->onDelete('cascade');
             $table->string('room_number');
+            $table->decimal('water_price', 10, 2);
+            $table->decimal('electricity_price', 10, 2);
             $table->boolean('available')->default(true);
             $table->decimal('room_price', 10, 2);
             $table->timestamps();

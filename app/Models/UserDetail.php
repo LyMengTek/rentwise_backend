@@ -16,6 +16,7 @@ class UserDetail extends Model
         'profile_picture',
         'id_card_picture',
         'user_type',
+        'join_code',
     ];
 
     protected $hidden = [
@@ -24,13 +25,9 @@ class UserDetail extends Model
 
     protected $casts = [
         'user_type' => 'string',
+        'join_code' => 'integer',
     ];
 
-    // Relationship with LandlordDetail
-    public function landlordDetail()
-    {
-        return $this->hasOne(LandlordDetail::class, 'user_id');
-    }
 
     // Relationship with InvoiceDetail
     public function invoices()
@@ -55,4 +52,36 @@ class UserDetail extends Model
     {
         return $this->user_type === 'renter';
     }
+
+        // Generate a unique join code
+        public static function generateJoinCode()
+        {
+            do {
+                $code = mt_rand(100000, 999999);
+            } while (self::where('join_code', $code)->exists());
+    
+            return $code;
+        }
+    
+        // Get the number of rooms owned by the landlord
+        public function getRoomCountAttribute()
+        {
+            return $this->rooms()->count();
+        }
+    
+        // Get the number of occupied rooms
+        public function getOccupiedRoomCountAttribute()
+        {
+            return $this->rooms()->where('available', false)->count();
+        }
+    
+        // Get the occupancy rate
+        public function getOccupancyRateAttribute()
+        {
+            $totalRooms = $this->room_count;
+            if ($totalRooms === 0) {
+                return 0;
+            }
+            return ($this->occupied_room_count / $totalRooms) * 100;
+        }
 }

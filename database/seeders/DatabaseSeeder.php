@@ -5,7 +5,6 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\UserDetail;
-use App\Models\LandlordDetail;
 use App\Models\RoomDetail;
 use App\Models\UtilityUsage;
 use App\Models\InvoiceDetail;
@@ -20,9 +19,6 @@ class DatabaseSeeder extends Seeder
     {
         // Create UserDetails (10 users: mix of renters and landlords)
         UserDetail::factory()->count(10)->create();
-
-        // Create LandlordDetails (3 landlords)
-        LandlordDetail::factory()->count(3)->create();
 
         // Create RoomDetails (15 rooms, about 5 per landlord)
         RoomDetail::factory()->count(15)->create();

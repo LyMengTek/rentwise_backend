@@ -13,6 +13,8 @@ class RoomDetail extends Model
         'landlord_id',
         'utility_id',
         'room_number',
+        'water_price',
+        'electricity_price',
         'available',
         'room_price',
     ];
@@ -20,6 +22,8 @@ class RoomDetail extends Model
     protected $casts = [
         'floor' => 'integer',
         'available' => 'boolean',
+        'water_price' => 'decimal:2',
+        'electricity_price' => 'decimal:2',
         'room_price' => 'decimal:2',
     ];
 
