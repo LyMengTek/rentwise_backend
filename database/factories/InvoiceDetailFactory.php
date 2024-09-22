@@ -5,7 +5,6 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\InvoiceDetail;
 use App\Models\UserDetail;
-use App\Models\RoomtypeDetail;
 use App\Models\CurrentUtilityUsage;
 use App\Models\PreviousUtilityUsage;
 
@@ -24,7 +23,6 @@ class InvoiceDetailFactory extends Factory
     {
         return [
             'user_id' => UserDetail::factory(),
-            'room_type_id' => RoomtypeDetail::factory(),
             'current_usage_id' => CurrentUtilityUsage::factory(),
             'previous_usage_id' => PreviousUtilityUsage::factory(),
             'amount_due' => $this->faker->randomFloat(2, 100, 1000),

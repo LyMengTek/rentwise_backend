@@ -5,7 +5,6 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\RoomDetail;
 use App\Models\LandlordDetail;
-use App\Models\RoomtypeDetail;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\RoomDetail>
@@ -23,9 +22,9 @@ class RoomDetailFactory extends Factory
         return [
             'floor' => $this->faker->numberBetween(1, 10),
             'landlord_id' => LandlordDetail::factory(),
-            'room_type_id' => RoomtypeDetail::factory(),
             'room_number' => $this->faker->unique()->numberBetween(100, 999),
             'available' => $this->faker->boolean,
+            'room_price' => $this->faker->randomFloat(2, 100, 1000)
         ];
     }
 }

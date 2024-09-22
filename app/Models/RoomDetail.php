@@ -14,11 +14,13 @@ class RoomDetail extends Model
         'room_type_id',
         'room_number',
         'available',
+        'room_price',
     ];
 
     protected $casts = [
         'floor' => 'integer',
         'available' => 'boolean',
+        'room_price' => 'decimal:2',
     ];
 
     // Relationship with LandlordDetail
@@ -49,5 +51,10 @@ class RoomDetail extends Model
     public function getFullRoomIdentifierAttribute()
     {
         return "Floor {$this->floor} - Room {$this->room_number}";
+    }
+     // You might want to add a method to get formatted price
+    public function getFormattedPriceAttribute()
+    {
+        return '$' . number_format($this->room_price, 2);
     }
 }

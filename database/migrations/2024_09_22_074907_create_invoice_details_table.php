@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')
                 ->constrained('user_details');
-            $table->foreignId('room_type_id')
-                ->constrained('roomtype_details');
             $table->foreignId('current_usage_id')
                 ->constrained('current_utility_usages');
             $table->foreignId('previous_usage_id')

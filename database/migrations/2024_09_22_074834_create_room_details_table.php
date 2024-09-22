@@ -17,11 +17,9 @@ return new class extends Migration
             $table->foreignId('landlord_id')
                 ->constrained('landlord_details')
             ->onDelete('cascade');
-            $table->foreignId('room_type_id')
-                ->constrained('roomtype_details')
-            ->onDelete('cascade');
             $table->string('room_number');
             $table->boolean('available')->default(true);
+            $table->decimal('room_price', 10, 2);
             $table->timestamps();
         });
     }

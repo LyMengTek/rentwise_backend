@@ -11,7 +11,6 @@ class InvoiceDetail extends Model
 
     protected $fillable = [
         'user_id',
-        'room_type_id',
         'current_usage_id',
         'previous_usage_id',
         'amount_due',
@@ -29,12 +28,6 @@ class InvoiceDetail extends Model
     public function user()
     {
         return $this->belongsTo(UserDetail::class, 'user_id');
-    }
-
-    // Relationship with RoomtypeDetail
-    public function roomType()
-    {
-        return $this->belongsTo(RoomtypeDetail::class, 'room_type_id');
     }
 
     // Relationship with CurrentUtilityUsage

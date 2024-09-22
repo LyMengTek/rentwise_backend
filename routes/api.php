@@ -4,6 +4,7 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\UserDetailController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\InvoiceDetailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,6 +16,10 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
+
+Route::Get('invoice', [InvoiceDetailController::class, 'index']);
+Route::Post('create/invoice', [InvoiceDetailController::class, 'store']);
 
 
 Route::post('/register', [UserDetailController::class, 'register']);
