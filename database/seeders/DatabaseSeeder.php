@@ -20,14 +20,21 @@ class DatabaseSeeder extends Seeder
         // Create UserDetails (10 users: mix of renters and landlords)
         UserDetail::factory()->count(10)->create();
 
-        // Create RoomDetails (15 rooms, about 5 per landlord)
-        RoomDetail::factory()->count(15)->create();
+        // Create UtilityUsages and RoomDetails (15 rooms, one utility usage per room)
+        $utilityUsages = UtilityUsage::factory()->count(15)->create();
 
-        // Create CurrentUtilityUsages (15, one for each room)
-        UtilityUsage::factory()->count(15)->create();
+        foreach ($utilityUsages as $utilityUsage) {
+            RoomDetail::factory()->create([
+                'room_code' => $utilityUsage->room_code,
+            ]);
+        }
 
         // Create InvoiceDetails (20, allowing for some rooms to have multiple invoices)
-        InvoiceDetail::factory()->count(20)->create();
+        foreach ($utilityUsages as $utilityUsage) {
+            InvoiceDetail::factory()->count(2)->create([
+                'room_code' => $utilityUsage->room_code,
+            ]);
+        }
 
         // Create RentalDetails (10, not all rooms are rented)
         RentalDetail::factory()->count(10)->create();
