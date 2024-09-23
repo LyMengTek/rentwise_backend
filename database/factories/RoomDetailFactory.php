@@ -20,6 +20,7 @@ class RoomDetailFactory extends Factory
     protected $model = RoomDetail::class;
     public function definition(): array
     {
+        $utilityUsage = UtilityUsage::factory()->create();   
         return [
             'floor' => $this->faker->numberBetween(1, 10),
             'user_id' => UserDetail::factory(),
@@ -28,7 +29,7 @@ class RoomDetailFactory extends Factory
             'room_price' => $this->faker->randomFloat(2, 100, 1000),
             'water_price' => $this->faker->randomFloat(2, 10, 100),
             'electricity_price' => $this->faker->randomFloat(2, 10, 100),
-            'room_code' => UtilityUsage::factory()->create()->room_code // Ensure room_code matches
+            'room_code' => $utilityUsage->room_code // Ensure room_code matches
         ];
     }
 }

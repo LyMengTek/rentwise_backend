@@ -21,6 +21,7 @@ class InvoiceDetail extends Model
         'amount_due' => 'decimal:2',
         'due_date' => 'datetime',
         'paid' => 'boolean',
+        'room_code' => 'integer',
     ];
 
     // Relationship with UserDetail

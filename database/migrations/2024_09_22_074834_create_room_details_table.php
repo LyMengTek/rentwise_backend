@@ -17,11 +17,11 @@ return new class extends Migration
             $table->foreignId('user_id')
             ->constrained('user_details')
             ->onDelete('cascade');
-        $table->integer('room_code'); // Add this line
-        $table->foreign('room_code')
-            ->references('room_code')
-            ->on('utility_usages')
-            ->onDelete('cascade'); // Add this line
+            $table->integer('room_code'); // Add this line
+            $table->foreign('room_code')
+                ->references('room_code')
+                ->on('utility_usages')
+                ->onDelete('cascade'); // Add this line
             $table->string('room_number');
             $table->decimal('water_price', 10, 2);
             $table->decimal('electricity_price', 10, 2);

@@ -26,13 +26,8 @@ class RoomDetail extends Model
         'water_price' => 'decimal:2',
         'electricity_price' => 'decimal:2',
         'room_price' => 'decimal:2',
+        'room_code' => 'integer',
     ];
-
-    // Relationship with LandlordDetail
-    public function landlord()
-    {
-        return $this->belongsTo(LandlordDetail::class, 'landlord_id');
-    }
 
     // Relationship with RentalDetail (if you have this model)
     public function rentals()

@@ -20,9 +20,10 @@ class InvoiceDetailFactory extends Factory
     protected $model = InvoiceDetail::class;
     public function definition(): array
     {
+        $utilityUsage = UtilityUsage::factory()->create();
         return [
             'user_id' => UserDetail::factory(),
-            'room_code' => UtilityUsage::factory()->create()->room_code,
+            'room_code' => $utilityUsage->room_code, // Ensure room_code matches
             'amount_due' => $this->faker->randomFloat(2, 100, 1000),
             'due_date' => $this->faker->dateTimeBetween('now', '+30 days'),
             'paid' => $this->faker->boolean,

@@ -24,6 +24,7 @@ class UtilityUsage extends Model
         'water_usage' => 'decimal:2',
         'electricity_usage' => 'decimal:2',
         'other' => 'decimal:2',
+        'room_code' => 'integer',
     ];
 
     // Relationship with InvoiceDetail
