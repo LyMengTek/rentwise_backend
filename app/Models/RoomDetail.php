@@ -29,6 +29,7 @@ class RoomDetail extends Model
         'room_code' => 'integer',
     ];
 
+    
     // Relationship with RentalDetail (if you have this model)
     public function rentals()
     {

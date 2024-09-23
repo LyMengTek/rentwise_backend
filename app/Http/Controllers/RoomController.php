@@ -22,7 +22,7 @@ class RoomController extends Controller
     public function getAvailableRoomsByUserId($user_id): JsonResponse
     {
         // Fetch all available rooms that belong to the specified landlord
-        $availableRooms = RoomDetail::where('user_id', $user_id)
+        $availableRooms = RoomDetail::where('landlord_id', $user_id)
                                     ->available() // Uses the scopeAvailable method
                                     ->get();
 
@@ -34,7 +34,7 @@ class RoomController extends Controller
     {
         // Validate the request
         $validator = Validator::make($request->all(), [
-            'user_id' => 'required|integer',
+            'landlord_id' => 'required|integer',
             'floor' => 'required|integer',
             'room_number' => 'required|string',
             'water_price' => 'required|numeric',
@@ -51,7 +51,7 @@ class RoomController extends Controller
         // Create or update room details
         $room = RoomDetail::updateOrCreate(
             [
-                'user_id' => $request->user_id,
+                'landlord_id' => $request->user_id,
                 'room_number' => $request->room_number,
                 'utility_id' =>  $request->utility_id,
             ], // Match on landlord_id and room_number to allow updates
