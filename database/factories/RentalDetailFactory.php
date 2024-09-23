@@ -22,7 +22,8 @@ class RentalDetailFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => UserDetail::factory(),
+            'landlord_id' => UserDetail::factory(),
+            'renter_id' => UserDetail::factory(),
             'room_id' => RoomDetail::factory(),
             'invoice_id' => InvoiceDetail::factory(),
             'start_date' => $this->faker->dateTimeBetween('-1 year', 'now'),

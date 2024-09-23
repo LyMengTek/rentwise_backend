@@ -4,14 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\JsonResponse;
+
 
 class RoomDetail extends Model
 {
     use HasFactory;
     protected $fillable = [
         'floor',
-        'landlord_id',
-        'utility_id',
+        'user_id',
         'room_number',
         'room_code',
         'water_price',
@@ -52,4 +53,5 @@ class RoomDetail extends Model
     {
         return '$' . number_format($this->room_price, 2);
     }
+
 }

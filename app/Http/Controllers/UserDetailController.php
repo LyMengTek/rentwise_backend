@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\LandlordDetail;
+use App\Models\RoomDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -141,6 +142,41 @@ class UserDetailController extends Controller
     
             // Return the renters as a JSON response
             return response()->json($renters);
-        }    
+        }
+        
+        
+
+        public function getAvailableRoomsByJoinCode(Request $request): JsonResponse
+    {
+        // Validate the join_code input
+        $validator = Validator::make($request->all(), [
+            'join_code' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 400);
+        }
+
+        // Find the landlord based on the join_code
+        $landlord = UserDetail::where('join_code', $request->join_code)
+                              ->where('user_type', 'landlord')
+                              ->first();
+
+        if (!$landlord) {
+            return response()->json(['error' => 'Landlord with the provided join code not found'], 404);
+        }
+
+        // Fetch available rooms that belong to this landlord
+        $availableRooms = RoomDetail::where('user_id', $landlord->id)
+                                    ->available() // Using the scopeAvailable method
+                                    ->get();
+
+        if ($availableRooms->isEmpty()) {
+            return response()->json(['message' => 'No available rooms found for this landlord'], 200);
+        }
+
+        // Return the available rooms as a JSON response
+        return response()->json($availableRooms, 200);
+    }
     
 }

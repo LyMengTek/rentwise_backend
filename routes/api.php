@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InvoiceDetailController;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\UtillityController;
 use App\Models\UserDetail;
 
 /*
@@ -20,6 +21,9 @@ use App\Models\UserDetail;
 */
 
 Route::get('/landlord/{landlord_id}/renters', [UserDetail::class, 'getRentersByJoinCode']);
+route::post('/rooms/by-join-code', [UserDetail::class, 'getAvailableRoomsByJoinCode']);
+
+Route::get('/rooms/available', [RoomController::class, 'getAllAvailableRooms']);
 
 Route::Get('invoice', [InvoiceDetailController::class, 'index']);
 Route::Post('create/invoice', [InvoiceDetailController::class, 'store']);
@@ -32,3 +36,5 @@ Route::post('/login', [UserDetailController::class, 'login']);
 Route::get('/rooms/available', [RoomController::class, 'getAvailableRooms']);
 route::get('/rooms/available/{id}', [RoomController::class, 'getAvailableRoomsByUserId']);
 Route::post('/rooms/setup', [RoomController::class, 'setupRoom']);
+
+Route::post('/utillity/create', [UtillityController::class, 'createUtility']);

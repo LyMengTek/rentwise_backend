@@ -13,7 +13,10 @@ return new class extends Migration
     {
         Schema::create('rental_details', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')
+            $table->foreignId('landord_id')
+                ->constrained('user_details')
+                ->onDelete('cascade');
+            $table->foreignId('renter_id')
                 ->constrained('user_details')
                 ->onDelete('cascade');
             $table->foreignId('room_id')

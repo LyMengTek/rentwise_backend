@@ -9,7 +9,8 @@ class RentalDetail extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'user_id',
+        'landlord_id',
+        'renter_id',
         'room_id',
         'invoice_id',
         'start_date',
