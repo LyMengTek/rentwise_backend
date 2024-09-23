@@ -22,7 +22,7 @@ class InvoiceDetailFactory extends Factory
     {
         return [
             'user_id' => UserDetail::factory(),
-            'usage_id' => UtilityUsage::factory(),
+            'room_code' => UtilityUsage::factory()->create()->room_code,
             'amount_due' => $this->faker->randomFloat(2, 100, 1000),
             'due_date' => $this->faker->dateTimeBetween('now', '+30 days'),
             'paid' => $this->faker->boolean,

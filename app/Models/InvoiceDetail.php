@@ -11,7 +11,7 @@ class InvoiceDetail extends Model
 
     protected $fillable = [
         'user_id',
-        'usage_id',
+        'room_code',
         'amount_due',
         'due_date',
         'paid',

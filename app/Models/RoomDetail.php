@@ -13,6 +13,7 @@ class RoomDetail extends Model
         'landlord_id',
         'utility_id',
         'room_number',
+        'room_code',
         'water_price',
         'electricity_price',
         'available',

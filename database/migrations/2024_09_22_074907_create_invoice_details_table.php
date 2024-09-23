@@ -15,8 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')
                 ->constrained('user_details');
-            $table->foreignId('usage_id')
-                ->constrained('utility_usages');
+                $table->integer('room_code'); // Add this line
+                $table->foreign('room_code')
+                    ->references('room_code')
+                    ->on('utility_usages')
+                    ->onDelete('cascade'); // Add this line
             $table->decimal('amount_due', 10, 2);
             $table->timestamp('due_date');
             $table->boolean('paid')->default(false);
