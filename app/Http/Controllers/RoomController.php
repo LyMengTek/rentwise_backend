@@ -6,38 +6,65 @@ use App\Models\LandlordDetail;
 use App\Models\RoomDetail;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class RoomController extends Controller
 {
-    // Function to get all room details
-    public function index(): JsonResponse
+    public function getAvailableRooms(): JsonResponse
     {
-        $rooms = RoomDetail::all();
-        return response()->json($rooms);
-    }
-
-    // Function to get only available rooms
-    public function available(): JsonResponse
-    {
+        // Fetch all rooms that are available
         $availableRooms = RoomDetail::available()->get();
+
+        // Return as JSON response
         return response()->json($availableRooms);
     }
 
-    // Function to get available rooms by landlord join code
-    public function availableByJoinCode(Request $request): JsonResponse
+    public function getAvailableRoomsByUserId($user_id): JsonResponse
     {
-        $request->validate(['join_code' => 'required|integer']);
+        // Fetch all available rooms that belong to the specified landlord
+        $availableRooms = RoomDetail::where('user_id', $user_id)
+                                    ->available() // Uses the scopeAvailable method
+                                    ->get();
 
-        // Find the landlord by join code
-        $landlord = LandlordDetail::where('join_code', $request->join_code)->first();
+        // Return as JSON response
+        return response()->json($availableRooms);
+    }
 
-        if (!$landlord) {
-            return response()->json(['message' => 'Landlord not found.'], 404);
+    public function setupRoom(Request $request): JsonResponse
+    {
+        // Validate the request
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required|integer',
+            'floor' => 'required|integer',
+            'room_number' => 'required|string',
+            'water_price' => 'required|numeric',
+            'electricity_price' => 'required|numeric',
+            'room_price' => 'required|numeric',
+            'available' => 'required|boolean',
+            'utility_id' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 400);
         }
 
-        // Get available rooms for the landlord
-        $availableRooms = RoomDetail::available()->where('landlord_id', $landlord->id)->get();
+        // Create or update room details
+        $room = RoomDetail::updateOrCreate(
+            [
+                'user_id' => $request->user_id,
+                'room_number' => $request->room_number,
+                'utility_id' =>  $request->utility_id,
+            ], // Match on landlord_id and room_number to allow updates
+            [
+                'floor' => $request->floor,
+                'water_price' => $request->water_price,
+                'electricity_price' => $request->electricity_price,
+                'room_price' => $request->room_price,
+                'available' => $request->available,
+            ]
+        );
 
-        return response()->json($availableRooms);
+        // Return the created/updated room as a JSON response
+        return response()->json($room, 201);
     }
 }

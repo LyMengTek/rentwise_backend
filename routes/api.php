@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InvoiceDetailController;
 use App\Http\Controllers\RoomController;
+use App\Models\UserDetail;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,7 @@ use App\Http\Controllers\RoomController;
 |
 */
 
+Route::get('/landlord/{landlord_id}/renters', [UserDetail::class, 'getRentersByJoinCode']);
 
 Route::Get('invoice', [InvoiceDetailController::class, 'index']);
 Route::Post('create/invoice', [InvoiceDetailController::class, 'store']);
@@ -26,6 +28,7 @@ Route::post('/register', [UserDetailController::class, 'register']);
 Route::get('/user/{id}', [UserDetailController::class, 'showUser']);
 Route::post('/login', [UserDetailController::class, 'login']);
 
-Route::get('/rooms', [RoomController::class, 'index']);
-Route::get('/rooms/available', [RoomController::class, 'available']);
-route::get('/rooms/available/join-code', [RoomController::class, 'availableByJoinCode']);
+
+Route::get('/rooms/available', [RoomController::class, 'getAvailableRooms']);
+route::get('/rooms/available/{id}', [RoomController::class, 'getAvailableRoomsByUserId']);
+Route::post('/rooms/setup', [RoomController::class, 'setupRoom']);

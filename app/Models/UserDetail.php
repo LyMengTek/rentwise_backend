@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class UserDetail extends Model
 {
@@ -83,5 +85,25 @@ class UserDetail extends Model
                 return 0;
             }
             return ($this->occupied_room_count / $totalRooms) * 100;
+        }
+
+
+        public function getRentersByJoinCode(Request $request): JsonResponse
+        {
+            // Get the currently authenticated landlord
+            $landlord = UserDetail::find($request->landlord_id);
+    
+            // Ensure that the user is a landlord
+            if (!$landlord || !$landlord->isLandlord()) {
+                return response()->json(['error' => 'User is not a landlord or not found'], 403);
+            }
+    
+            // Fetch all renters who share the landlord's join_code
+            $renters = UserDetail::where('join_code', $landlord->join_code)
+                                ->where('user_type', 'renter')
+                                ->get();
+    
+            // Return the renters as a JSON response
+            return response()->json($renters);
         }
 }
