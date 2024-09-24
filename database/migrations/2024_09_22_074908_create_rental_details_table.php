@@ -23,6 +23,7 @@ return new class extends Migration
                 ->constrained('room_details')
                 ->onDelete('cascade');
             $table->foreignId('invoice_id')
+                ->nullable()
                 ->constrained('invoice_details')
                 ->onDelete('cascade');
             $table->timestamp('start_date');

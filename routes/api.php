@@ -5,6 +5,7 @@ use App\Http\Controllers\UserDetailController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InvoiceDetailController;
+use App\Http\Controllers\RentalController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\UtillityController;
 use App\Models\UserDetail;
@@ -38,3 +39,4 @@ route::get('/rooms/available/{id}', [RoomController::class, 'getAvailableRoomsBy
 Route::post('/rooms/setup', [RoomController::class, 'setupRoom']);
 
 Route::post('/utillity/create', [UtillityController::class, 'createUtility']);
+Route::post('/rential/setup', [RentalController::class, 'setupRental']);
