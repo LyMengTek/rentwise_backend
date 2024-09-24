@@ -29,7 +29,9 @@ class RoomDetailFactory extends Factory
             'room_price' => $this->faker->randomFloat(2, 100, 1000),
             'water_price' => $this->faker->randomFloat(2, 10, 100),
             'electricity_price' => $this->faker->randomFloat(2, 10, 100),
-            'room_code' => $utilityUsage->room_code // Ensure room_code matches
+            'room_code' => $utilityUsage->room_code, // Ensure room_code matches
+            'description' => $this->faker->paragraph,
+            
         ];
     }
 }

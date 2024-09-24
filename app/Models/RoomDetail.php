@@ -19,6 +19,7 @@ class RoomDetail extends Model
         'electricity_price',
         'available',
         'room_price',
+        'description',
     ];
 
     protected $casts = [
@@ -28,6 +29,7 @@ class RoomDetail extends Model
         'electricity_price' => 'decimal:2',
         'room_price' => 'decimal:2',
         'room_code' => 'integer',
+        'description' => 'string',
     ];
 
     
