@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\UserDetailController;
 use Illuminate\Http\Request;
@@ -40,3 +41,5 @@ Route::post('/rooms/setup', [RoomController::class, 'setupRoom']);
 
 Route::post('/utillity/create', [UtillityController::class, 'createUtility']);
 Route::post('/rential/setup', [RentalController::class, 'setupRental']);
+
+Route::post('/create/invoice', [InvoiceController::class, 'createInvoice']);

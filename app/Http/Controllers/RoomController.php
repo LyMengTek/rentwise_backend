@@ -39,6 +39,7 @@ class RoomController extends Controller
             'electricity_price' => 'required|numeric',
             'room_price' => 'required|numeric',
             'available' => 'required|boolean',
+            'description' => 'required|string'
         ]);
 
         if ($validator->fails()) {
@@ -55,6 +56,7 @@ class RoomController extends Controller
                 'room_number' => $request->room_number,
             ],
             [
+                'description' => $request->description,
                 'floor' => $request->floor,
                 'water_price' => $request->water_price,
                 'electricity_price' => $request->electricity_price,
