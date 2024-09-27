@@ -56,4 +56,9 @@ class RoomDetail extends Model
         return '$' . number_format($this->room_price, 2);
     }
 
+    public function invoices()
+    {
+        return $this->hasMany(InvoiceDetail::class, 'room_code', 'room_code');
+    }
+
 }

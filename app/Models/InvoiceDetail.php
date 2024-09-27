@@ -30,6 +30,11 @@ class InvoiceDetail extends Model
         return $this->belongsTo(UserDetail::class, 'user_id');
     }
 
+    public function room()
+    {
+        return $this->belongsTo(RoomDetail::class, 'room_code', 'room_code');
+    }
+
     // Relationship with CurrentUtilityUsage
     public function Usage()
     {

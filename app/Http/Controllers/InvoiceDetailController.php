@@ -14,11 +14,13 @@ class InvoiceDetailController extends Controller
 {
     /**
      * Display a listing of the resource.
-     */
-    public function index()
+     */ public function index()
     {
-        $invoices = InvoiceDetail::with(['user', 'currentUsage', 'previousUsage'])->paginate(15);
-        return response()->json($invoices);
+        // Fetch all InvoiceDetail records with related RoomDetail and UserDetail
+        $invoiceDetails = InvoiceDetail::with(['room', 'user'])->get();
+
+        // Return the records as a JSON response
+        return response()->json($invoiceDetails);
     }
 
     /**
