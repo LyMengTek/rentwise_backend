@@ -23,7 +23,7 @@ return new class extends Migration
                 ->on('utility_usages')
                 ->onDelete('cascade'); // Add this line
             $table->string('room_number');
-            $table->string('description');
+            $table->text('description');
             $table->decimal('water_price', 10, 2);
             $table->decimal('electricity_price', 10, 2);
             $table->boolean('available')->default(true);

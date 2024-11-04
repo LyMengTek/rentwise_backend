@@ -8,6 +8,7 @@ use App\Models\UserDetail;
 use App\Models\RoomDetail;
 use App\Models\UtilityUsage;
 use App\Models\InvoiceDetail;
+use App\Models\LandlordFloorRoom;
 use App\Models\RentalDetail;
 
 class DatabaseSeeder extends Seeder
@@ -38,5 +39,6 @@ class DatabaseSeeder extends Seeder
 
         // Create RentalDetails (10, not all rooms are rented)
         RentalDetail::factory()->count(10)->create();
+        LandlordFloorRoom::factory()->count(5)->create();
     }
 }

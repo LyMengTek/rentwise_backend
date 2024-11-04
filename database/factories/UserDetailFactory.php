@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\UserDetail;
+use Illuminate\Support\Facades\Hash;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\UserDetail>
@@ -20,7 +21,7 @@ class UserDetailFactory extends Factory
     {
         return [
             'username' => $this->faker->unique()->userName,
-            'password' => 'password',
+            'password' => Hash::make('password'), // Hash the password using Bcrypt
             'email' => $this->faker->unique()->safeEmail,
             'phone_number' => $this->faker->phoneNumber,
             'profile_picture' => $this->faker->imageUrl(),
