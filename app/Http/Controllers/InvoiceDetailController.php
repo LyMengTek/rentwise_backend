@@ -16,11 +16,22 @@ class InvoiceDetailController extends Controller
      * Display a listing of the resource.
      */ public function index()
     {
-        // Fetch all InvoiceDetail records with related RoomDetail and UserDetail
-        $invoiceDetails = InvoiceDetail::with(['room', 'user'])->get();
+        try {
+            
+            $invoiceDetails = InvoiceDetail::with(['room', 'user'])->get();
 
-        // Return the records as a JSON response
-        return response()->json($invoiceDetails);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Invoice details retrieved successfully',
+                'data' => $invoiceDetails
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occurred while retrieving invoice details',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
@@ -44,14 +55,14 @@ class InvoiceDetailController extends Controller
             'due_date' => 'required|date',
             'paid' => 'boolean',
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json([
                 'message' => 'Validation failed',
                 'errors' => $validator->errors()
             ], 422);
         }
-    
+
         try {
             $invoice = InvoiceDetail::create($validator->validated());
             return response()->json([
