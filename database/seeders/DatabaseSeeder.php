@@ -10,6 +10,7 @@ use App\Models\UtilityUsage;
 use App\Models\InvoiceDetail;
 use App\Models\LandlordFloorRoom;
 use App\Models\RentalDetail;
+use App\Models\RoomTypePrice;
 
 class DatabaseSeeder extends Seeder
 {
@@ -40,5 +41,6 @@ class DatabaseSeeder extends Seeder
         // Create RentalDetails (10, not all rooms are rented)
         RentalDetail::factory()->count(10)->create();
         LandlordFloorRoom::factory()->count(5)->create();
+        RoomTypePrice::factory()->count(10)->create();
     }
 }

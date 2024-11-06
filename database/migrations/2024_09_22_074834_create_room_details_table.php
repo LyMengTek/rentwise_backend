@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('room_details', function (Blueprint $table) {
             $table->id();
             $table->integer('floor');
+            $table->foreignId('room_type')->constrained('room_type_prices')->onDelete('cascade'); // This references 'id' in 'room_type_prices'
             $table->foreignId('user_id')
-            ->constrained('user_details')
-            ->onDelete('cascade');
+                ->constrained('user_details')
+                ->onDelete('cascade');
             $table->integer('room_code'); // Add this line
             $table->foreign('room_code')
                 ->references('room_code')
@@ -27,7 +28,6 @@ return new class extends Migration
             $table->decimal('water_price', 10, 2);
             $table->decimal('electricity_price', 10, 2);
             $table->boolean('available')->default(true);
-            $table->decimal('room_price', 10, 2);
             $table->timestamps();
         });
     }

@@ -18,7 +18,6 @@ class RoomDetail extends Model
         'water_price',
         'electricity_price',
         'available',
-        'room_price',
         'description',
     ];
 
@@ -27,12 +26,11 @@ class RoomDetail extends Model
         'available' => 'boolean',
         'water_price' => 'decimal:2',
         'electricity_price' => 'decimal:2',
-        'room_price' => 'decimal:2',
         'room_code' => 'integer',
         'description' => 'string',
     ];
 
-    
+
     // Relationship with RentalDetail (if you have this model)
     public function rentals()
     {
@@ -50,7 +48,7 @@ class RoomDetail extends Model
     {
         return "Floor {$this->floor} - Room {$this->room_number}";
     }
-     // You might want to add a method to get formatted price
+    // You might want to add a method to get formatted price
     public function getFormattedPriceAttribute()
     {
         return '$' . number_format($this->room_price, 2);
@@ -61,4 +59,8 @@ class RoomDetail extends Model
         return $this->hasMany(InvoiceDetail::class, 'room_code', 'room_code');
     }
 
+    public function roomType()
+    {
+        return $this->belongsTo(RoomTypePrice::class, 'room_type');
+    }
 }
