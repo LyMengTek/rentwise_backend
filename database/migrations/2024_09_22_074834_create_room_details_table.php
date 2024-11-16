@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('room_details', function (Blueprint $table) {
             $table->id();
             $table->integer('floor');
+            $table->foreignId('utility_price')->constrained('utility_prices')->onDelete('cascade');
             $table->foreignId('room_type')->constrained('room_type_prices')->onDelete('cascade'); // This references 'id' in 'room_type_prices'
             $table->foreignId('user_id')
                 ->constrained('user_details')
@@ -25,8 +26,7 @@ return new class extends Migration
                 ->onDelete('cascade'); // Add this line
             $table->string('room_number');
             $table->text('description');
-            $table->decimal('water_price', 10, 2);
-            $table->decimal('electricity_price', 10, 2);
+        
             $table->boolean('available')->default(true);
             $table->timestamps();
         });
