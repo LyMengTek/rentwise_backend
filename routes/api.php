@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FloorRoomController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\UserDetailController;
@@ -8,6 +9,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InvoiceDetailController;
 use App\Http\Controllers\RentalController;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\RoomTypePriceController;
+use App\Http\Controllers\UtilityPriceController;
 use App\Http\Controllers\UtillityController;
 use App\Models\UserDetail;
 
@@ -43,3 +46,8 @@ Route::post('/utillity/create', [UtillityController::class, 'createUtility']);
 Route::post('/rential/setup', [RentalController::class, 'setupRental']);
 
 Route::post('/create/invoice', [InvoiceController::class, 'createInvoice']);
+
+Route::post('/utility-prices', [UtilityPriceController::class, 'storeUtilityPrices']);
+Route::post('/landlord-floor-rooms', [FloorRoomController::class, 'storeFloorRoom']);
+
+Route::post('/room-type-prices', [RoomTypePriceController::class, 'store']);

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('landlord_id');
             $table->integer('floor');
-            $table->integer('total_rooms');
+            $table->integer('rooms');
             $table->timestamps();
 
                // Foreign key constraint

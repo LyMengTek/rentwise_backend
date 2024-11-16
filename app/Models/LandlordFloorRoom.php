@@ -14,11 +14,11 @@ class LandlordFloorRoom extends Model
 
      // Specify which attributes are mass assignable
      protected $fillable = [
-         'landlord_id',
-         'floor',
-         'total_rooms',
-     ];
-
+        'landlord_id',
+        'floor',
+        'rooms', // Change this to match the column name in your migration
+    ];
+    
 
     /**
      * Get the landlord associated with the floor and room summary.

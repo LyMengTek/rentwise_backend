@@ -13,9 +13,13 @@ return new class extends Migration
     {
         Schema::create('room_type_prices', function (Blueprint $table) {
             $table->id();
-            $table->integer('type'); // Room type identifier (e.g., 1 for Studio, 2 for 1 Bedroom, etc.)
+            $table->unsignedBigInteger('landlord_id'); // Add landlord_id
+            $table->string('type'); // Room type identifier (e.g., 1 for Studio, 2 for 1 Bedroom, etc.)
             $table->integer('type_price'); // Price for this room type
             $table->timestamps();
+
+            // Foreign key constraint
+            $table->foreign('landlord_id')->references('id')->on('user_details')->onDelete('cascade');
         });
     }
 

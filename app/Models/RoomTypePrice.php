@@ -9,9 +9,19 @@ class RoomTypePrice extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['type', 'type_price'];
+    protected $fillable = ['landlord_id', 'type', 'type_price'];
 
-    // Define the inverse of the relationship
+    /**
+     * Define the relationship with UserDetail (landlord).
+     */
+    public function landlord()
+    {
+        return $this->belongsTo(UserDetail::class, 'landlord_id');
+    }
+
+    /**
+     * Define the relationship with RoomDetail.
+     */
     public function roomDetails()
     {
         return $this->hasMany(RoomDetail::class, 'room_type');
