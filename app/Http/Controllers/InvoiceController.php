@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\InvoiceDetail;
 use App\Models\RoomDetail;
+use App\Models\UtilityPrice;
 use App\Models\UtilityUsage;
 use Illuminate\Http\Request;
 
@@ -13,18 +14,14 @@ class InvoiceController extends Controller
     {
         // Validate incoming request
         $request->validate([
-            'user_id' => 'required|integer|exists:user_details,id',// Validate user_id
-            'year' => 'required|integer',
-            'month' => 'required|integer',
+            'user_id' => 'required|integer|exists:user_details,id', // Validate user_id
             'new_water_usage' => 'required|numeric',
             'new_electricity_usage' => 'required|numeric',
             'other' => 'required|numeric',
             'room_code' => 'required|integer',
         ]);
 
-        $userId = $request->input('user_id'); // Get user_id from request
-        $year = $request->input('year');
-        $month = $request->input('month');
+        $userId = $request->input('user_id');
         $newWaterUsage = $request->input('new_water_usage');
         $newElectricityUsage = $request->input('new_electricity_usage');
         $other = $request->input('other');
@@ -32,21 +29,23 @@ class InvoiceController extends Controller
 
         // Find the current utility usage for the given room code
         $currentUsage = UtilityUsage::where('room_code', $roomCode)
-            ->where('year', $year)
-            ->whereMonth('month', $month)
+            ->latest('created_at')
             ->first();
 
-        // Check if current usage exists
         if (!$currentUsage) {
-            return response()->json(['error' => 'Utility usage not found for the specified room code and date.'], 404);
+            return response()->json(['error' => 'Utility usage not found for the specified room code.'], 404);
         }
 
-        // Find room details to get prices
+        // Find room details
         $room = RoomDetail::where('room_code', $roomCode)->first();
-        
-        // Check if room exists
         if (!$room) {
             return response()->json(['error' => 'Room not found.'], 404);
+        }
+
+        // Retrieve utility prices using utility_price_id
+        $utilityPrice = UtilityPrice::find($room->utility_price_id);
+        if (!$utilityPrice) {
+            return response()->json(['error' => 'Utility price details not found.'], 404);
         }
 
         // Calculate old usage
@@ -58,8 +57,8 @@ class InvoiceController extends Controller
         $electricityDifference = $newElectricityUsage - $oldElectricityUsage;
 
         // Calculate costs
-        $waterCost = $waterDifference * $room->water_price;
-        $electricityCost = $electricityDifference * $room->electricity_price;
+        $waterCost = $waterDifference * $utilityPrice->water_price;
+        $electricityCost = $electricityDifference * $utilityPrice->electricity_price;
 
         // Total cost
         $totalCost = $waterCost + $electricityCost + $other;

@@ -18,8 +18,6 @@ class UtilityUsageFactory extends Factory
     public function definition(): array
     {
         return [
-            'month' => $this->faker->dateTimeThisYear,
-            'year' => $this->faker->year,
             'water_usage' => $this->faker->randomFloat(2, 0, 100),
             'electricity_usage' => $this->faker->randomFloat(2, 0, 1000),
             'other' => $this->faker->randomFloat(2, 0, 50),

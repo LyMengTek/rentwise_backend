@@ -13,8 +13,6 @@ return new class extends Migration
     {
         Schema::create('utility_usages', function (Blueprint $table) {
             $table->id();
-            $table->timestamp('month');
-            $table->integer('year');
             $table->integer('room_code')->nullable()->index();
             $table->decimal('water_usage', 10, 2);  // Assuming 2 decimal places
             $table->decimal('electricity_usage', 10, 2);

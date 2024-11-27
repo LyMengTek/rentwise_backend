@@ -6,9 +6,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\RoomTypePrice;
 use App\Models\UserDetail;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\RoomTypePrice>
- */
 class RoomTypePriceFactory extends Factory
 {
     protected $model = RoomTypePrice::class;
@@ -23,8 +20,7 @@ class RoomTypePriceFactory extends Factory
         return [
             'type' => $this->faker->numberBetween(1, 5),
             'type_price' => $this->faker->randomFloat(2, 100, 500),
-            'landlord_id' => UserDetail::factory()->create()->id, // Use a related landlord
+            'landlord_id' => UserDetail::factory()->create()->id, // Use UserDetail factory for landlord_id
         ];
     }
 }
-

@@ -23,7 +23,7 @@ class LandlordFloorRoomFactory extends Factory
         return [
             'landlord_id' => UserDetail::factory(),  // Assumes UserDetail factory exists and generates landlords
             'floor' => $this->faker->numberBetween(1, 10),
-            'total_rooms' => $this->faker->numberBetween(1, 20),
+            'room' => $this->faker->numberBetween(1, 20),
         ];
     }
 }

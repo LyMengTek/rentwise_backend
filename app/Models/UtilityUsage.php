@@ -10,8 +10,6 @@ class UtilityUsage extends Model
     use HasFactory;
 
     protected $fillable = [
-        'month',
-        'year',
         'water_usage',
         'room_code',
         'electricity_usage',
@@ -19,8 +17,6 @@ class UtilityUsage extends Model
     ];
 
     protected $casts = [
-        'month' => 'datetime',
-        'year' => 'integer',
         'water_usage' => 'decimal:2',
         'electricity_usage' => 'decimal:2',
         'other' => 'decimal:2',

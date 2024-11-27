@@ -32,12 +32,6 @@ class RoomDetail extends Model
         return $this->hasMany(RentalDetail::class, 'room_id');
     }
 
-    // Relationship to UtilityPrice
-    public function utilityPrice()
-    {
-        return $this->belongsTo(UtilityPrice::class, 'utility_price_id');
-    }
-
     // Scope to get only available rooms
     public function scopeAvailable($query)
     {
@@ -65,5 +59,15 @@ class RoomDetail extends Model
     public function roomType()
     {
         return $this->belongsTo(RoomTypePrice::class, 'room_type_id');
+    }
+
+    public function roomTypePrice()
+    {
+        return $this->belongsTo(RoomTypePrice::class, 'room_type_price_id');
+    }
+
+    public function utilityPrice()
+    {
+        return $this->belongsTo(UtilityPrice::class, 'utility_price_id');
     }
 }

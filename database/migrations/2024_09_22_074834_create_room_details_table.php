@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('room_details', function (Blueprint $table) {
             $table->id();
             $table->integer('floor');
-            $table->foreignId('utility_price')->constrained('utility_prices')->onDelete('cascade');
-            $table->foreignId('room_type')->constrained('room_type_prices')->onDelete('cascade'); // This references 'id' in 'room_type_prices'
+            $table->foreignId('utility_price_id')->constrained('utility_prices')->onDelete('cascade'); // Ensure correct field name
+            $table->foreignId('room_type_price_id')->constrained('room_type_prices')->onDelete('cascade'); // Ensure correct field name
             $table->foreignId('user_id')
                 ->constrained('user_details')
                 ->onDelete('cascade');
