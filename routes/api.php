@@ -9,8 +9,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InvoiceDetailController;
 use App\Http\Controllers\RentalController;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\RoomSetupController;
 use App\Http\Controllers\RoomTypePriceController;
 use App\Http\Controllers\UtilityPriceController;
+use App\Http\Controllers\UtilityUsageController;
 use App\Http\Controllers\UtillityController;
 use App\Models\UserDetail;
 
@@ -51,3 +53,9 @@ Route::post('/utility-prices', [UtilityPriceController::class, 'storeUtilityPric
 Route::post('/landlord-floor-rooms', [FloorRoomController::class, 'storeFloorRoom']);
 
 Route::post('/room-type-prices', [RoomTypePriceController::class, 'store']);
+
+
+Route::post('/setup', [UtilityUsageController::class, 'storeRentalDetails']);
+
+
+Route::get('/room-details/{landlordId}', [RoomSetupController::class, 'getRoomAndFloorDetails'])->name('landlord.room.details');
