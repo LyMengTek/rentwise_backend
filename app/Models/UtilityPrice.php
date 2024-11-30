@@ -9,7 +9,7 @@ class UtilityPrice extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['water_price', 'electricity_price'];
+    protected $fillable = ['landlord_id', 'water_price', 'electricity_price'];
 
     // Define the inverse of the relationship
     public function roomDetails()

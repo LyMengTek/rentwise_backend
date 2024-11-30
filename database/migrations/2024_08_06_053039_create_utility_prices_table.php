@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('utility_prices', function (Blueprint $table) {
             $table->id();
+            $table->decimal('landlord_id');
             $table->decimal('water_price', 8, 2);
             $table->decimal('electricity_price', 8, 2);
             $table->timestamps();

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -22,18 +21,28 @@ class RoomTypePriceController extends Controller
                 'room_types.*.type' => 'required|string',
                 'room_types.*.price' => 'required|integer',
             ]);
-    
-            // Array to store created RoomTypePrice entries
+
+            // Array to store RoomTypePrice entries (either created or updated)
             $roomTypePrices = [];
-    
-            // Iterate over each room type and create a RoomTypePrice entry
+
+            // Check if there are existing records for the given landlord_id
+            $existingRoomTypes = RoomTypePrice::where('landlord_id', $validatedData['landlord_id'])->get();
+
+            // If there are existing records, delete them before overwriting
+            if ($existingRoomTypes->isNotEmpty()) {
+                // Optionally, you can delete old records before saving the new ones
+                RoomTypePrice::where('landlord_id', $validatedData['landlord_id'])->delete();
+            }
+
+            // Iterate over each room type and create new RoomTypePrice entries
             foreach ($validatedData['room_types'] as $roomType) {
+                // Create a new entry for each room type
                 $roomTypePrice = RoomTypePrice::create([
                     'landlord_id' => $validatedData['landlord_id'],
                     'type' => $roomType['type'],
                     'type_price' => $roomType['price'],
                 ]);
-    
+
                 // Collect the created entry details
                 $roomTypePrices[] = [
                     'id' => $roomTypePrice->id,
@@ -44,13 +53,14 @@ class RoomTypePriceController extends Controller
                     'updated_at' => $roomTypePrice->updated_at,
                 ];
             }
-    
-            // Return the details of all created RoomTypePrice entries
+
+            // Return the details of all created or updated RoomTypePrice entries
             return response()->json([
                 'success' => true,
                 'room_type_prices' => $roomTypePrices,
-                'message' => 'Room type prices created successfully.',
+                'message' => 'Room type prices saved successfully.',
             ], 201);
+
         } catch (QueryException $e) {
             // Handle database-related exceptions
             return response()->json([
@@ -67,5 +77,4 @@ class RoomTypePriceController extends Controller
             ], 500);
         }
     }
-    
 }
