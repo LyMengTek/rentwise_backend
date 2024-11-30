@@ -14,23 +14,19 @@ return new class extends Migration
         Schema::create('room_details', function (Blueprint $table) {
             $table->id();
             $table->integer('floor');
-            $table->foreignId('utility_price_id')->constrained('utility_prices')->onDelete('cascade'); // Ensure correct field name
-            $table->foreignId('room_type_price_id')->constrained('room_type_prices')->onDelete('cascade'); // Ensure correct field name
-            $table->foreignId('user_id')
-                ->constrained('user_details')
-                ->onDelete('cascade');
-            $table->integer('room_code'); // Add this line
-            $table->foreign('room_code')
-                ->references('room_code')
-                ->on('utility_usages')
-                ->onDelete('cascade'); // Add this line
-            $table->string('room_number');
+            $table->foreignId('utility_price_id')->nullable()->constrained('utility_prices')->onDelete('cascade');
+            $table->foreignId('room_type_price_id')->nullable()->constrained('room_type_prices')->onDelete('cascade'); // Make nullable
+            $table->foreignId('user_id')->nullable()->constrained('user_details')->onDelete('cascade');
+            $table->string('room_number')->unique();
             $table->text('description');
-        
             $table->boolean('available')->default(true);
             $table->timestamps();
+        
+            // Optional addition to link utilities
+            $table->integer('room_code')->unique(); 
         });
     }
+    
 
     /**
      * Reverse the migrations.
