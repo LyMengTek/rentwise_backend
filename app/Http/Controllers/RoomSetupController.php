@@ -22,24 +22,25 @@ class RoomSetupController extends Controller
             ->get(['type', 'type_price'])
             ->map(function ($item) {
                 return [
-                    'name' => $this->getRoomTypeName($item->type),
+                    // 'name' => $this->getRoomTypeName($item->type),
+                    'name' => $item->type,
                     'price' => $item->type_price
                 ];
             });
-
+    
         // Fetch floors and rooms
         $floors = LandlordFloorRoom::where('landlord_id', $landlordId)
             ->get()
             ->map(function ($floor) {
                 return [
                     'floorNumber' => $floor->floor,
-                    'rooms' => explode(',', $floor->rooms)
+                    'room' => array_map('intval', explode(',', $floor->room)) // Convert rooms to integers
                 ];
             });
-
+    
         // Fetch utility prices
         $utilityPrices = UtilityPrice::first(); // Assuming there's only one utility price record
-
+    
         // Prepare the response data
         $response = [
             'isSetupComplete' => $roomTypes->isNotEmpty() && $floors->isNotEmpty(),
@@ -50,9 +51,10 @@ class RoomSetupController extends Controller
                 'electricityPrice' => $utilityPrices ? $utilityPrices->electricity_price : null
             ]
         ];
-
+    
         return response()->json($response);
     }
+    
 
     /**
      * Get the room type name based on the type identifier.

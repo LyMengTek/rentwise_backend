@@ -16,7 +16,7 @@ class LandlordFloorRoom extends Model
      protected $fillable = [
         'landlord_id',
         'floor',
-        'rooms', // Change this to match the column name in your migration
+        'room', // Change this to match the column name in your migration
     ];
     
 

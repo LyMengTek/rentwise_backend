@@ -45,6 +45,8 @@ route::get('/rooms/available/{id}', [RoomController::class, 'getAvailableRoomsBy
 Route::post('/rooms/setup', [RoomController::class, 'setupRoom']);
 
 Route::post('/utillity/create', [UtillityController::class, 'createUtility']);
+
+Route::post('/utility-usage', [UtilityUsageController::class, 'storeUtility'])->name('utility-usage.storeUtility');
 Route::post('/rential/setup', [RentalController::class, 'setupRental']);
 
 Route::post('/create/invoice', [InvoiceController::class, 'createInvoice']);

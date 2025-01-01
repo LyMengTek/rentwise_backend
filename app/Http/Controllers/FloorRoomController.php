@@ -35,7 +35,7 @@ class FloorRoomController extends Controller
                 $floorRoom = LandlordFloorRoom::create([
                     'landlord_id' => $landlordId,
                     'floor' => $floor['floor_number'],
-                    'rooms' => $floor['room_count'],
+                    'room' => $floor['room_count'],
                 ]);
 
                 $savedData[] = $floorRoom;

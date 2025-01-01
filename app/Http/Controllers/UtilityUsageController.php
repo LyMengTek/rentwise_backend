@@ -8,6 +8,7 @@ use App\Models\UtilityUsage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\RoomTypePrice;
+use Illuminate\Support\Str;
 use App\Models\UtilityPrice; // Add this import
 
 class UtilityUsageController extends Controller
@@ -71,6 +72,52 @@ class UtilityUsageController extends Controller
         });
 
         return response()->json(['message' => 'Rental details and utility usage stored successfully.'], 201);
+    }
+
+    public function storeUtility(Request $request)
+    {
+        // Validate the request data
+        $request->validate([
+            '*.water_usage' => 'required|numeric',
+            '*.electricity_usage' => 'required|numeric',
+            '*.other' => 'required|numeric',
+        ]);
+        
+        // Initialize an array to store all the utility usage records
+        $utilityUsageRecords = [];
+    
+        // Loop through the request data and store each utility usage
+        foreach ($request->all() as $utilityData) {
+            // Generate a 6-digit room code for each entry
+            $roomCode = $this->generateRoomCode();
+            
+            // Create the UtilityUsage record for each utility data object
+            $utilityUsageRecord = UtilityUsage::create([
+                'room_code' => $roomCode,
+                'water_usage' => $utilityData['water_usage'] ?? 0,
+                'electricity_usage' => $utilityData['electricity_usage'] ?? 0,
+                'other' => $utilityData['other'] ?? 0,
+            ]);
+    
+            // Add the created record to the array of all records
+            $utilityUsageRecords[] = $utilityUsageRecord;
+        }
+        
+        // Return response with success message and all stored records
+        return response()->json([
+            'message' => 'Utility usage stored successfully.',
+            'data' => $utilityUsageRecords,
+        ], 201);
+    }
+    
+    /**
+     * Generate a 6-digit room code.
+     *
+     * @return string
+     */
+    protected function generateRoomCode()
+    {
+        return str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
     }
     
 }
