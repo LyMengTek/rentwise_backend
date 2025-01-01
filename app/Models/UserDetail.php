@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Laravel\Sanctum\HasApiTokens;
 
 class UserDetail extends Model
 {
-    use HasFactory;
+    use HasApiTokens, HasFactory;
     protected $fillable = [
         'username',
         'password',

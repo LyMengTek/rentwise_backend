@@ -14,11 +14,23 @@ class InvoiceDetailController extends Controller
 {
     /**
      * Display a listing of the resource.
-     */ public function index()
+     */
+    public function index(Request $request)
     {
         try {
-            
-            $invoiceDetails = InvoiceDetail::with(['room', 'user'])->get();
+            // Check if 'paid' filter is provided in the request
+            $paidFilter = $request->query('paid'); // Get the 'paid' query parameter
+
+            // Build the query with filtering if needed
+            $query = InvoiceDetail::with(['room', 'user']);
+
+            if ($paidFilter !== null) {
+                // Apply the 'paid' filter, converting string to boolean
+                $query->where('paid', filter_var($paidFilter, FILTER_VALIDATE_BOOLEAN));
+            }
+
+            // Execute the query and get results
+            $invoiceDetails = $query->get();
 
             return response()->json([
                 'status' => 'success',
@@ -33,6 +45,7 @@ class InvoiceDetailController extends Controller
             ], 500);
         }
     }
+
 
     /**
      * Show the form for creating a new resource.

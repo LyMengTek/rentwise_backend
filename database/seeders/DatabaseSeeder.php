@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
         UserDetail::factory()->count(10)->create();
 
         // Create UtilityUsages and RoomDetails (15 rooms, one utility usage per room)
-        $utilityUsages = UtilityUsage::factory()->count(15)->create();
+        $utilityUsages = UtilityUsage::factory()->count(5)->create();
 
         foreach ($utilityUsages as $utilityUsage) {
             RoomDetail::factory()->create([

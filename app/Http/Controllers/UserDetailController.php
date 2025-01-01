@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 
 class UserDetailController extends Controller
 {
@@ -27,43 +28,52 @@ class UserDetailController extends Controller
 
     public function register(Request $request): JsonResponse
     {
-        // Validate the request input
-        $request->validate([
-            'username' => 'required|string|max:255|unique:user_details',
-            'email' => 'required|email|max:255|unique:user_details',
-            'password' => 'required|string|min:8',
-            'phone_number' => 'required|string|max:15',
-            'user_type' => 'required|in:landlord,renter',
-            'profile_picture' => 'nullable|string',
-            'id_card_picture' => 'nullable|string',
-        ]);
+        try {
+            // Validate the request input
+            $request->validate([
+                'username' => 'required|string|max:255|unique:user_details',
+                'email' => 'required|email|max:255|unique:user_details',
+                'password' => 'required|string|min:8',
+                'phone_number' => 'required|string|max:15',
+                'user_type' => 'required|in:landlord,renter',
+                'profile_picture' => 'nullable|string',
+                'id_card_picture' => 'nullable|string',
+            ]);
 
-        // Prepare data for new user
-        $data = [
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'phone_number' => $request->phone_number,
-            'profile_picture' => $request->profile_picture,
-            'id_card_picture' => $request->id_card_picture,
-            'user_type' => $request->user_type,
-        ];
+            // Prepare data for new user
+            $data = [
+                'username' => $request->username,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'phone_number' => $request->phone_number,
+                'profile_picture' => $request->profile_picture,
+                'id_card_picture' => $request->id_card_picture,
+                'user_type' => $request->user_type,
+            ];
 
-        // Generate join_code for landlords or set it to null for renters
-        if ($request->user_type === 'landlord') {
-            $data['join_code'] = UserDetail::generateJoinCode();  // Generate unique 5-digit join code
-        } else {
-            $data['join_code'] = null;  // Set join_code to null for renters
+            // Generate join_code for landlords or set it to null for renters
+            if ($request->user_type === 'landlord') {
+                $data['join_code'] = UserDetail::generateJoinCode();  // Generate unique 5-digit join code
+            } else {
+                $data['join_code'] = null;  // Set join_code to null for renters
+            }
+
+            // Create the new user
+            $user = UserDetail::create($data);
+
+            // Return a success response
+            return response()->json([
+                'status' => 'success',
+                'message' => 'User registered successfully',
+                'data' => $user,
+            ], 201);
+        } catch (ValidationException $e) {
+            // Return a validation error response
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], 422);
         }
-
-        // Create the new user
-        $user = UserDetail::create($data);
-
-        // Return a success response
-        return response()->json([
-            'message' => 'User registered successfully',
-            'user' => $user,
-        ], 201);
     }
 
     public function showUser($id)
@@ -110,16 +120,23 @@ class UserDetailController extends Controller
         // Check if user exists and password is correct
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
+                'status' => 'error',
                 'message' => 'Invalid credentials'
             ], 401);
         }
+        
+        // Generate a token for the user
+        $token = $user->createToken('auth_token')->plainTextToken;
 
         // Prepare the response
         $response = [
+            'status' => 'success',
+            'message' => 'Login successful',
             'user' => [
                 'id' => $user->id,
                 'user_type' => $user->user_type,
                 'username' => $user->username,
+                'token' => $token, // Include the token in the response
             ]
         ];
 
