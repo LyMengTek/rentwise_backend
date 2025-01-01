@@ -27,49 +27,53 @@ class RoomController extends Controller
         return response()->json($availableRooms);
     }
 
-    // Create or update room details
     public function setupRoom(Request $request): JsonResponse
     {
         // Validate the request
         $validator = Validator::make($request->all(), [
-            'user_id' => 'required|integer',
-            'floor' => 'required|integer',
-            'room_number' => 'required|string',
-            'water_price' => 'required|numeric',
-            'electricity_price' => 'required|numeric',
-            'room_price' => 'required|numeric',
-            'available' => 'required|boolean',
-            'description' => 'required|string'
+            'rooms' => 'required|array', // Expect an array of rooms
+            'rooms.*.user_id' => 'required|integer',
+            'rooms.*.floor' => 'required|integer',
+            'rooms.*.room_number' => 'required|integer',
+            'rooms.*.utility_price_id' => 'required|integer|exists:utility_prices,id', // Ensure utility_price_id exists
+            'rooms.*.room_type_price_id' => 'required|integer|exists:room_type_prices,id', // Ensure room_type_price_id exists
+            'rooms.*.room_code' => 'required|string',
+            'rooms.*.description' => 'required|string',
+            'rooms.*.available' => 'boolean' // Optional, defaults to true
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 400);
         }
-
-        // Generate a unique room code if not provided
-        $roomCode = $request->has('room_code') ? $request->room_code : $this->generateRoomCode();
-
-        // Create or update room details
-        $room = RoomDetail::updateOrCreate(
-            [
-                'user_id' => $request->user_id,
-                'room_number' => $request->room_number,
-            ],
-            [
-                'description' => $request->description,
-                'floor' => $request->floor,
-                'water_price' => $request->water_price,
-                'electricity_price' => $request->electricity_price,
-                'room_price' => $request->room_price,
-                'available' => $request->available,
-                'room_code' => $roomCode,
-            ]
-        );
-
-        // Return the created/updated room as a JSON response
-        return response()->json($room, 201);
+    
+        $createdRooms = [];
+    
+        // Loop through each room setup
+        foreach ($request->rooms as $roomData) {
+            // Create or update room details
+            $room = RoomDetail::updateOrCreate(
+                [
+                    'user_id' => $roomData['user_id'],
+                    'room_number' => $roomData['room_number'],
+                ],
+                [
+                    'floor' => $roomData['floor'],
+                    'utility_price_id' => $roomData['utility_price_id'],
+                    'room_type_price_id' => $roomData['room_type_price_id'],
+                    'room_code' => $roomData['room_code'],
+                    'description' => $roomData['description'],
+                    'available' => isset($roomData['available']) ? $roomData['available'] : true, // Default to true
+                ]
+            );
+    
+            // Add the created/updated room to the response
+            $createdRooms[] = $room;
+        }
+    
+        // Return the created/updated rooms as a JSON response
+        return response()->json($createdRooms, 201);
     }
-
+    
     // Generate a unique 6-digit room code
     private function generateRoomCode(): int
     {
