@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (!Schema::hasTable('utility_usages')) {
         Schema::create('utility_usages', function (Blueprint $table) {
             $table->id();
             $table->integer('room_code')->nullable()->index();
@@ -18,7 +19,7 @@ return new class extends Migration
             $table->decimal('electricity_usage', 10, 2);
             $table->decimal('other', 10, 2);
             $table->timestamps();
-        });
+        });}
     }
 
     /**

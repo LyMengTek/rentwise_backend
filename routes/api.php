@@ -16,6 +16,7 @@ use App\Http\Controllers\UtilityUsageController;
 use App\Http\Controllers\UtillityController;
 use App\Models\UserDetail;
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -47,7 +48,7 @@ Route::post('/rooms/setup', [RoomController::class, 'setupRoom']);
 Route::post('/utillity/create', [UtillityController::class, 'createUtility']);
 
 Route::post('/utility-usage', [UtilityUsageController::class, 'storeUtility'])->name('utility-usage.storeUtility');
-Route::post('/rential/setup', [RentalController::class, 'setupRental']);
+Route::post('/rental/setup', [RentalController::class, 'setupCompleteRental']);
 
 Route::post('/create/invoice', [InvoiceController::class, 'createInvoice']);
 
