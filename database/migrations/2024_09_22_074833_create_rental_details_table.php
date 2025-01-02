@@ -17,14 +17,11 @@ return new class extends Migration
                 ->constrained('user_details')
                 ->onDelete('cascade');
             $table->foreignId('renter_id')
+                ->nullable()
                 ->constrained('user_details')
                 ->onDelete('cascade');
             $table->foreignId('room_id')
                 ->constrained('room_details')
-                ->onDelete('cascade');
-            $table->foreignId('invoice_id')
-                ->nullable()
-                ->constrained('invoice_details')
                 ->onDelete('cascade');
             $table->timestamp('start_date');
             $table->timestamp('end_date');

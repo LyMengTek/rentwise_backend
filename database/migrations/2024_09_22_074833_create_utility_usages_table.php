@@ -14,6 +14,7 @@ return new class extends Migration
         if (!Schema::hasTable('utility_usages')) {
         Schema::create('utility_usages', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('rental_id')->constrained('rental_details')->onDelete('cascade'); // Add rental_id foreign key
             $table->integer('room_code')->nullable()->index();
             $table->decimal('water_usage', 10, 2);  // Assuming 2 decimal places
             $table->decimal('electricity_usage', 10, 2);

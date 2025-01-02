@@ -10,6 +10,7 @@ class UtilityUsage extends Model
     use HasFactory;
 
     protected $fillable = [
+        'rental_id',
         'water_usage',
         'room_code',
         'electricity_usage',
@@ -22,6 +23,11 @@ class UtilityUsage extends Model
         'other' => 'decimal:2',
         'room_code' => 'integer',
     ];
+
+        public function rental()
+    {
+        return $this->belongsTo(RentalDetail::class, 'rental_id');
+    }
 
     // Relationship with InvoiceDetail
     public function invoice()

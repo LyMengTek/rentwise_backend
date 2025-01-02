@@ -10,6 +10,7 @@ class InvoiceDetail extends Model
     use HasFactory;
 
     protected $fillable = [
+        'rental_id', 
         'user_id',
         'room_code',
         'amount_due',

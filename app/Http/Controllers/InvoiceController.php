@@ -6,6 +6,7 @@ use App\Models\InvoiceDetail;
 use App\Models\RoomDetail;
 use App\Models\UtilityPrice;
 use App\Models\UtilityUsage;
+use App\Models\RentalDetail;
 use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
@@ -14,32 +15,36 @@ class InvoiceController extends Controller
     {
         // Validate incoming request
         $request->validate([
-            'user_id' => 'required|integer|exists:user_details,id', // Validate user_id
+            'rental_id' => 'required|integer|exists:rental_details,id', // Validate rental_id
             'new_water_usage' => 'required|numeric',
             'new_electricity_usage' => 'required|numeric',
             'other' => 'required|numeric',
-            'room_code' => 'required|integer',
         ]);
 
-        $userId = $request->input('user_id');
+        $rentalId = $request->input('rental_id');
         $newWaterUsage = $request->input('new_water_usage');
         $newElectricityUsage = $request->input('new_electricity_usage');
         $other = $request->input('other');
-        $roomCode = $request->input('room_code');
 
-        // Find the current utility usage for the given room code
-        $currentUsage = UtilityUsage::where('room_code', $roomCode)
+        // Find the rental details
+        $rental = RentalDetail::find($rentalId);
+        if (!$rental) {
+            return response()->json(['error' => 'Rental not found.'], 404);
+        }
+
+        // Find the room details
+        $room = RoomDetail::find($rental->room_id);
+        if (!$room) {
+            return response()->json(['error' => 'Room not found.'], 404);
+        }
+
+        // Find the current utility usage for the given rental_id
+        $currentUsage = UtilityUsage::where('rental_id', $rentalId)
             ->latest('created_at')
             ->first();
 
         if (!$currentUsage) {
-            return response()->json(['error' => 'Utility usage not found for the specified room code.'], 404);
-        }
-
-        // Find room details
-        $room = RoomDetail::where('room_code', $roomCode)->first();
-        if (!$room) {
-            return response()->json(['error' => 'Room not found.'], 404);
+            return response()->json(['error' => 'Utility usage not found for the specified rental ID.'], 404);
         }
 
         // Retrieve utility prices using utility_price_id
@@ -51,6 +56,11 @@ class InvoiceController extends Controller
         // Calculate old usage
         $oldWaterUsage = $currentUsage->water_usage;
         $oldElectricityUsage = $currentUsage->electricity_usage;
+
+        // Validate that the new usage is not less than the old usage
+        if ($newWaterUsage < $oldWaterUsage || $newElectricityUsage < $oldElectricityUsage) {
+            return response()->json(['error' => 'New usage cannot be less than previous usage.'], 400);
+        }
 
         // Calculate usage differences
         $waterDifference = $newWaterUsage - $oldWaterUsage;
@@ -65,11 +75,15 @@ class InvoiceController extends Controller
 
         // Create invoice
         $invoice = InvoiceDetail::create([
-            'user_id' => $userId,
-            'room_code' => $roomCode,
+            'rental_id' => $rentalId,
             'amount_due' => $totalCost,
             'due_date' => now()->addDays(30), // Set due date to 30 days from now
             'paid' => false,
+        ]);
+
+        $currentUsage->update([
+            'water_usage' => $newWaterUsage,
+            'electricity_usage' => $newElectricityUsage,
         ]);
 
         // Return the output data

@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('utility_prices', function (Blueprint $table) {
             $table->id();
-            $table->decimal('landlord_id');
+            $table->foreignId('landlord_id')->constrained('user_details')->onDelete('cascade'); // Ensure this field is set
             $table->decimal('water_price', 8, 2);
             $table->decimal('electricity_price', 8, 2);
             $table->timestamps();

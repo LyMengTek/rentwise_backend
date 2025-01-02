@@ -12,7 +12,6 @@ class RentalDetail extends Model
         'landlord_id',
         'renter_id',
         'room_id',
-        'invoice_id',
         'start_date',
         'end_date',
         'is_active',
@@ -37,9 +36,9 @@ class RentalDetail extends Model
     }
 
     // Relationship with InvoiceDetail
-    public function invoice()
+    public function invoices()
     {
-        return $this->belongsTo(InvoiceDetail::class, 'invoice_id');
+        return $this->hasMany(InvoiceDetail::class, 'rental_id');
     }
 
     // Scope to get only active rentals

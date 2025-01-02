@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\LandlordDetail;
 use App\Models\RoomDetail;
 use Illuminate\Http\Request;
+use App\Models\RentalDetail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\UserDetail;
@@ -90,6 +91,11 @@ class UserDetailController extends Controller
             ], 404);
         }
 
+        // Load rentals with invoices
+        $rentals = RentalDetail::where('landlord_id', $user->id)
+            ->with('invoices')
+            ->get();
+
         // Return user details
         return response()->json([
             'status' => 'success',
@@ -102,6 +108,7 @@ class UserDetailController extends Controller
                 'id_card_picture' => $user->id_card_picture,
                 'user_type' => $user->user_type,
                 'join_code' => $user->join_code,
+                'rentals' => $rentals,
             ]
         ]);
     }

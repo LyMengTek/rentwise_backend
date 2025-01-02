@@ -22,7 +22,7 @@ class UtilityUsageController extends Controller
     public function storeRentalDetails(Request $request)
     {
         $validatedData = $request->validate([
-            'renter_id' => 'required|integer',
+            'renter_id' => 'nullable|integer',
             'landlord_id' => 'required|integer',
             'floor' => 'required|integer',
             'room_type_price_id' => 'required|integer',
@@ -30,68 +30,66 @@ class UtilityUsageController extends Controller
             'electricity_usage' => 'required|numeric',
             'description' => 'required|string',
         ]);
-    
+
         // Declare the variables outside the transaction
         $room = null;
         $utilityUsage = null;
         $rental = null;
         $utilityPrice = null;
-    
+
         try {
             DB::transaction(function () use ($validatedData, &$room, &$utilityUsage, &$rental, &$utilityPrice) {
                 // Create UtilityPrice first to get a valid utility_price_id
                 $utilityPrice = UtilityPrice::create([
+                    'landlord_id' => $validatedData['landlord_id'],
                     'water_price' => $validatedData['water_usage'], // Assuming water_price is the same as water_usage
                     'electricity_price' => $validatedData['electricity_usage'], // Assuming electricity_price is the same as electricity_usage
                     'other' => 0, // Default value for 'other' usage
                 ]);
-    
+
                 // Create RoomDetail
                 $room = RoomDetail::create([
                     'floor' => $validatedData['floor'],
-                    'utility_price_id' => $utilityPrice->id, // Use the created UtilityPrice ID
-                    'room_type_price_id' => $validatedData['room_type_price_id'],
-                    'room_number' => RoomDetail::max('room_number') + 1,
+                    'user_id' => $validatedData['landlord_id'],
+                    'room_number' => $this->generateRoomNumber($validatedData['floor']),
+                    'available' => true,
+                    'room_code' => $this->generateRoomCode(),
                     'description' => $validatedData['description'],
-                    'user_id' => $validatedData['landlord_id'], // Assuming user_id is the landlord_id
-                    'room_code' => RoomDetail::max('room_code') + 1, // Assuming room_code is auto-incremented
+                    'room_type_price_id' => $validatedData['room_type_price_id'],
+                    'utility_price_id' => $utilityPrice->id,
                 ]);
-    
+
+                // Create RentalDetail
+                $rental = RentalDetail::create([
+                    'landlord_id' => $validatedData['landlord_id'],
+                    'renter_id' => $validatedData['renter_id'] ?? null, // Handle missing renter_id
+                    'room_id' => $room->id,
+                    'start_date' => now(),
+                    'end_date' => now()->addYear(),
+                    'is_active' => true,
+                ]);
+
                 // Create UtilityUsage
                 $utilityUsage = UtilityUsage::create([
+                    'rental_id' => $rental->id, // Ensure this field is set
                     'room_code' => $room->room_code,
-                    'month' => now(),
-                    'year' => now()->year,
                     'water_usage' => $validatedData['water_usage'],
                     'electricity_usage' => $validatedData['electricity_usage'],
                     'other' => 0, // Default value for 'other' usage
                 ]);
-    
-                // Create RentalDetail
-                $rental = RentalDetail::create([
-                    'landlord_id' => $validatedData['landlord_id'],
-                    'renter_id' => $validatedData['renter_id'],
-                    'room_id' => $room->id,
-                    'start_date' => now(),
-                    'end_date' => now()->addMonth(),
-                    'is_active' => true,
-                ]);
             });
-    
-            // Return response with status, message, and data
+
             return response()->json([
                 'status' => 'success',
-                'message' => 'Rental details and utility usage stored successfully.',
+                'message' => 'Rental details stored successfully.',
                 'data' => [
-                    'room' => $room, // Return the room data
-                    'utility_usage' => $utilityUsage, // Return the utility usage data
-                    'rental' => $rental, // Return the rental data
-                    'utility_price' => $utilityPrice // Return the utility price data
-                ]
-            ], 201);
-            
+                    'room' => $room,
+                    'utility_usage' => $utilityUsage,
+                    'rental' => $rental,
+                    'utility_price' => $utilityPrice,
+                ],
+            ]);
         } catch (\Exception $e) {
-            // Handle exception and return an error message
             return response()->json([
                 'status' => 'error',
                 'message' => 'An error occurred while storing rental details.',
@@ -141,9 +139,16 @@ class UtilityUsageController extends Controller
      *
      * @return string
      */
-    protected function generateRoomCode()
+    private function generateRoomNumber($floor)
     {
-        return str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
+        // Generate a unique room number based on the floor
+        return $floor * 100 + rand(1, 99);
+    }
+
+    private function generateRoomCode()
+    {
+        // Generate a unique room code
+        return rand(100000, 999999);
     }
     
 

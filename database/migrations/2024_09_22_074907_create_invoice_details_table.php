@@ -13,13 +13,16 @@ return new class extends Migration
     {
         Schema::create('invoice_details', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')
+            $table->foreignId('rental_id')
+                ->constrained('rental_details')
+                ->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()
                 ->constrained('user_details');
-                $table->integer('room_code'); // Add this line
-                $table->foreign('room_code')
-                    ->references('room_code')
-                    ->on('utility_usages')
-                    ->onDelete('cascade'); // Add this line
+            $table->integer('room_code')->nullable(); // Add this line
+            $table->foreign('room_code')
+                ->references('room_code')
+                ->on('utility_usages')
+                ->onDelete('cascade'); // Add this line
             $table->decimal('amount_due', 10, 2);
             $table->timestamp('due_date');
             $table->boolean('paid')->default(false);
