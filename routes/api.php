@@ -7,6 +7,7 @@ use App\Http\Controllers\UserDetailController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InvoiceDetailController;
+use App\Http\Controllers\LandlordConfigurationController;
 use App\Http\Controllers\RentalController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\RoomSetupController;
@@ -48,7 +49,10 @@ Route::post('/rooms/setup', [RoomController::class, 'setupRoom']);
 Route::post('/utillity/create', [UtillityController::class, 'createUtility']);
 
 Route::post('/utility-usage', [UtilityUsageController::class, 'storeUtility'])->name('utility-usage.storeUtility');
+
+//big 2
 Route::post('/rental/setup', [RentalController::class, 'setupCompleteRental']);
+Route::post('/landlord-configurations', [LandlordConfigurationController::class, 'storeLandlordConfigurations']);
 
 Route::post('/create/invoice', [InvoiceController::class, 'createInvoice']);
 

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\RentalDetail;
 use App\Models\RoomDetail;
-use App\Models\UserDetail;
 use App\Models\UtilityUsage;
 use App\Models\RoomTypePrice;
 use Illuminate\Http\JsonResponse;
@@ -19,8 +18,8 @@ class RentalController extends Controller
         // Custom validation rule to check if room_type exists in room_type_prices for the landlord
         Validator::extend('valid_room_type', function ($attribute, $value, $parameters, $validator) {
             $data = $validator->getData();
-            $index = explode('.', $attribute)[1]; // Get the index of the rental (e.g., 0, 1, etc.)
-            $landlordId = $data['rentals'][$index]['landlord_id'] ?? null; // Access landlord_id for the specific rental
+            $index = explode('.', $attribute)[1];
+            $landlordId = $data['rentals'][$index]['landlord_id'] ?? null;
 
             if (!$landlordId) {
                 return false;
@@ -40,7 +39,7 @@ class RentalController extends Controller
             'rentals.*.room_number' => 'required|integer',
             'rentals.*.water_usage' => 'required|numeric',
             'rentals.*.electricity_usage' => 'required|numeric',
-            'rentals.*.room_type' => 'required|string|valid_room_type', // Use custom validation rule
+            'rentals.*.room_type' => 'required|string|valid_room_type',
             'rentals.*.utility_price_id' => 'required|integer|exists:utility_prices,id',
             'rentals.*.description' => 'required|string',
         ], [
@@ -85,7 +84,7 @@ class RentalController extends Controller
                 }
 
                 // 1. Setup Room
-                $roomCode = $this->generateRoomCode(); // Generate a unique room code
+                $roomCode = $this->generateRoomCode();
                 $room = RoomDetail::updateOrCreate(
                     [
                         'user_id' => $rentalData['landlord_id'],
@@ -101,15 +100,7 @@ class RentalController extends Controller
                     ]
                 );
 
-                // 2. Create Utility Usage Record
-                $utilityUsage = UtilityUsage::create([
-                    'room_code' => $roomCode,
-                    'water_usage' => $rentalData['water_usage'],
-                    'electricity_usage' => $rentalData['electricity_usage'],
-                    'other' => $rentalData['other'] ?? 0,
-                ]);
-
-                // 3. Create Rental Record
+                // 2. Create Rental Record first
                 $rental = RentalDetail::create([
                     'landlord_id' => $rentalData['landlord_id'],
                     'renter_id' => $rentalData['renter_id'],
@@ -117,6 +108,15 @@ class RentalController extends Controller
                     'start_date' => now(),
                     'end_date' => now()->addYear(),
                     'is_active' => true,
+                ]);
+
+                // 3. Create Utility Usage Record with rental_id
+                $utilityUsage = UtilityUsage::create([
+                    'rental_id' => $rental->id,  // Add the rental_id here
+                    'room_code' => $roomCode,
+                    'water_usage' => $rentalData['water_usage'],
+                    'electricity_usage' => $rentalData['electricity_usage'],
+                    'other' => $rentalData['other'] ?? 0,
                 ]);
 
                 $results[] = [
@@ -150,10 +150,10 @@ class RentalController extends Controller
      */
     private function generateRoomCode(): string
     {
-        $code = mt_rand(100000, 999999); // Generate a random 6-digit number
+        $code = mt_rand(100000, 999999);
         while (RoomDetail::where('room_code', $code)->exists()) {
-            $code = mt_rand(100000, 999999); // Regenerate if the code already exists
+            $code = mt_rand(100000, 999999);
         }
-        return (string) $code; // Return the code as a string
+        return (string) $code;
     }
 }
