@@ -10,9 +10,10 @@ class InvoiceDetail extends Model
     use HasFactory;
 
     protected $fillable = [
-        'rental_id', 
-        'user_id',
+        'rental_id',
         'room_code',
+        'landlord_id',
+        'renter_id',
         'amount_due',
         'due_date',
         'paid',
@@ -40,12 +41,6 @@ class InvoiceDetail extends Model
     public function Usage()
     {
         return $this->belongsTo(UtilityUsage::class, 'usage_id');
-    }
-
-    // Relationship with RentalDetail
-    public function rental()
-    {
-        return $this->hasOne(RentalDetail::class, 'invoice_id');
     }
 
     // Scope for unpaid invoices
@@ -84,5 +79,20 @@ class InvoiceDetail extends Model
             ];
         }
         return null;
+    }
+
+    public function rental()
+    {
+        return $this->belongsTo(RentalDetail::class, 'rental_id');
+    }
+
+    public function landlord()
+    {
+        return $this->belongsTo(UserDetail::class, 'landlord_id');
+    }
+
+    public function renter()
+    {
+        return $this->belongsTo(UserDetail::class, 'renter_id');
     }
 }

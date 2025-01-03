@@ -16,13 +16,17 @@ return new class extends Migration
             $table->foreignId('rental_id')
                 ->constrained('rental_details')
                 ->onDelete('cascade');
-            $table->foreignId('user_id')->nullable()
-                ->constrained('user_details');
-            $table->integer('room_code')->nullable(); // Add this line
+            $table->integer('room_code')->nullable();
             $table->foreign('room_code')
                 ->references('room_code')
                 ->on('utility_usages')
-                ->onDelete('cascade'); // Add this line
+                ->onDelete('cascade');
+            $table->foreignId('landlord_id')
+                ->constrained('user_details')
+                ->onDelete('cascade');
+            $table->foreignId('renter_id')
+                ->constrained('user_details')
+                ->onDelete('cascade');
             $table->decimal('amount_due', 10, 2);
             $table->timestamp('due_date');
             $table->boolean('paid')->default(false);

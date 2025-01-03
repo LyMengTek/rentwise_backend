@@ -20,18 +20,96 @@ class InvoiceDetailController extends Controller
         try {
             // Check if 'paid' filter is provided in the request
             $paidFilter = $request->query('paid'); // Get the 'paid' query parameter
+            $sortBy = $request->query('sort_by', 'created_at'); // Default sort by 'created_at'
+            $sortOrder = $request->query('sort_order', 'desc'); // Default sort order 'desc'
+            $perPage = $request->query('per_page', 15); // Default items per page
 
             // Build the query with filtering if needed
-            $query = InvoiceDetail::with(['room', 'user']);
+            $query = InvoiceDetail::with(['rental.room', 'rental.landlord', 'rental.renter']);
 
             if ($paidFilter !== null) {
                 // Apply the 'paid' filter, converting string to boolean
                 $query->where('paid', filter_var($paidFilter, FILTER_VALIDATE_BOOLEAN));
             }
 
-            // Execute the query and get results
-            $invoiceDetails = $query->get();
+            // Apply sorting
+            $query->orderBy($sortBy, $sortOrder);
 
+            // Execute the query with pagination
+            $invoiceDetails = $query->paginate($perPage);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Invoice details retrieved successfully',
+                'data' => $invoiceDetails
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occurred while retrieving invoice details',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getByRenterId($renterId, Request $request)
+    {
+        try {
+            $sortBy = $request->query('sort_by', 'created_at'); // Default sort by 'created_at'
+            $sortOrder = $request->query('sort_order', 'desc'); // Default sort order 'desc'
+            $perPage = $request->query('per_page', 15); // Default items per page
+    
+            // Build the query
+            $query = InvoiceDetail::with(['rental.room', 'rental.landlord', 'rental.renter']);
+    
+            if ($renterId !== null) {
+                $query->whereHas('rental', function ($q) use ($renterId) {
+                    $q->where('renter_id', $renterId);
+                });
+            }
+    
+            // Apply sorting
+            $query->orderBy($sortBy, $sortOrder);
+    
+            // Execute the query with pagination
+            $invoiceDetails = $query->paginate($perPage);
+    
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Invoice details retrieved successfully',
+                'data' => $invoiceDetails
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occurred while retrieving invoice details',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+    
+    public function getByLandlordId($landlordId, Request $request)
+    {
+        try {
+            $sortBy = $request->query('sort_by', 'created_at'); // Default sort by 'created_at'
+            $sortOrder = $request->query('sort_order', 'desc'); // Default sort order 'desc'
+            $perPage = $request->query('per_page', 15); // Default items per page
+    
+            // Build the query
+            $query = InvoiceDetail::with(['rental.room', 'rental.landlord', 'rental.renter']);
+    
+            if ($landlordId !== null) {
+                $query->whereHas('rental', function ($q) use ($landlordId) {
+                    $q->where('landlord_id', $landlordId);
+                });
+            }
+    
+            // Apply sorting
+            $query->orderBy($sortBy, $sortOrder);
+    
+            // Execute the query with pagination
+            $invoiceDetails = $query->paginate($perPage);
+    
             return response()->json([
                 'status' => 'success',
                 'message' => 'Invoice details retrieved successfully',

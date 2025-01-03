@@ -36,6 +36,8 @@ Route::get('/rooms/available', [RoomController::class, 'getAllAvailableRooms']);
 
 Route::Get('invoice', [InvoiceDetailController::class, 'index']);
 Route::Post('create/invoice', [InvoiceDetailController::class, 'store']);
+Route::get('invoice/byRenter/{renter_id}', [InvoiceDetailController::class, 'getByRenterId']);
+Route::get('invoice/byLandlord/{landlord_id}', [InvoiceDetailController::class, 'getByLandlordId']);
 
 Route::post('/register', [UserDetailController::class, 'register']);
 Route::get('/user/{id}', [UserDetailController::class, 'showUser']);

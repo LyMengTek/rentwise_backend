@@ -3,14 +3,13 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Log;
 use App\Models\UserDetail;
 use App\Models\RoomDetail;
 use App\Models\UtilityUsage;
 use App\Models\InvoiceDetail;
-use App\Models\LandlordFloorRoom;
 use App\Models\RentalDetail;
 use App\Models\RoomTypePrice;
+use Illuminate\Support\Facades\Log;
 
 class DatabaseSeeder extends Seeder
 {
@@ -47,28 +46,23 @@ class DatabaseSeeder extends Seeder
         $rentals = RentalDetail::factory()->count(10)->create();
         foreach ($rentals as $index => $rental) {
             Log::info("RentalDetail {$index} created: ID {$rental->id}");
-        }
-        Log::info('RentalDetails created.');
 
-        // Create InvoiceDetails (20 invoices, allowing for some rooms to have multiple invoices)
-        Log::info('Creating InvoiceDetails...');
-        $invoices = InvoiceDetail::factory()->count(20)->create();
-        foreach ($invoices as $index => $invoice) {
-            Log::info("InvoiceDetail {$index} created: ID {$invoice->id}");
+            // Create UtilityUsages for each rental
+            $utilityUsage = UtilityUsage::factory()->create([
+                'rental_id' => $rental->id,
+                'room_code' => $rental->room->room_code,
+            ]);
+            Log::info("UtilityUsage created: ID {$utilityUsage->id}");
+
+            // Create InvoiceDetails for each rental
+            InvoiceDetail::factory()->count(2)->create([
+                'rental_id' => $rental->id,
+                'room_code' => $utilityUsage->room_code,
+                'landlord_id' => $rental->landlord_id,
+                'renter_id' => $rental->renter_id,
+            ]);
         }
         Log::info('InvoiceDetails created.');
-
-        // Create UtilityUsages (5 utility usages)
-        Log::info('Creating UtilityUsages...');
-        $utilityUsages = UtilityUsage::factory()->count(5)->create();
-        foreach ($utilityUsages as $index => $utilityUsage) {
-            Log::info("UtilityUsage {$index} created: ID {$utilityUsage->id}");
-        }
-        Log::info('UtilityUsages created.');
-
-        Log::info('Creating LandlordFloorRooms...');
-        LandlordFloorRoom::factory()->count(5)->create();
-        Log::info('LandlordFloorRooms created.');
 
         Log::info('Seeding process completed.');
     }
