@@ -29,18 +29,6 @@ class RentalDetail extends Model
         return $this->belongsTo(UserDetail::class, 'user_id');
     }
 
-    // Relationship with RoomDetail
-    public function room()
-    {
-        return $this->belongsTo(RoomDetail::class, 'room_id');
-    }
-
-    // Relationship with InvoiceDetail
-    public function invoices()
-    {
-        return $this->hasMany(InvoiceDetail::class, 'rental_id');
-    }
-
     // Scope to get only active rentals
     public function scopeActive($query)
     {
@@ -58,5 +46,26 @@ class RentalDetail extends Model
     {
         $now = now();
         return $this->is_active && $this->start_date <= $now && $this->end_date >= $now;
+    }
+
+
+    public function room()
+    {
+        return $this->belongsTo(RoomDetail::class, 'room_id');
+    }
+
+    public function utilityUsage()
+    {
+        return $this->hasOne(UtilityUsage::class, 'room_code', 'room_code');
+    }
+
+    public function roomTypePrice()
+    {
+        return $this->belongsTo(RoomTypePrice::class, 'room_type_price_id');
+    }
+
+    public function invoices()
+    {
+        return $this->hasMany(InvoiceDetail::class, 'rental_id');
     }
 }

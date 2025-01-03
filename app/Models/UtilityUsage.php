@@ -24,9 +24,9 @@ class UtilityUsage extends Model
         'room_code' => 'integer',
     ];
 
-        public function rental()
+    public function rental()
     {
-        return $this->belongsTo(RentalDetail::class, 'rental_id');
+        return $this->belongsTo(RentalDetail::class, 'room_code', 'room_code');
     }
 
     // Relationship with InvoiceDetail

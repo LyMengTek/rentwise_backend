@@ -27,9 +27,9 @@ class RoomDetail extends Model
     ];
 
     // Relationship with RentalDetail
-    public function rentals()
+    public function rental()
     {
-        return $this->hasMany(RentalDetail::class, 'room_id');
+        return $this->hasOne(RentalDetail::class, 'room_id');
     }
 
     // Scope to get only available rooms

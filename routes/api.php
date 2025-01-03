@@ -66,3 +66,5 @@ Route::post('/setup', [UtilityUsageController::class, 'storeRentalDetails']);
 
 
 Route::get('/room-details/{landlordId}', [RoomSetupController::class, 'getRoomAndFloorDetails'])->name('landlord.room.details');
+
+Route::get('/rentals/{id}', [RentalController::class, 'showRentalsByLandlord']);

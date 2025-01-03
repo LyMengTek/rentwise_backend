@@ -156,4 +156,34 @@ class RentalController extends Controller
         }
         return (string) $code;
     }
+
+    /**
+     * Show all rentals for a specific landlord ID.
+     *
+     * @param int $landlordId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function showRentalsByLandlord($landlordId)
+    {
+        // Find rentals by landlord ID
+        $rentals = RentalDetail::where('landlord_id', $landlordId)
+            ->with(['room', 'utilityUsage', 'roomTypePrice', 'invoices'])
+            ->get();
+
+        // Check if rentals exist
+        if ($rentals->isEmpty()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No rentals found for this landlord',
+                'data' => null
+            ], 404);
+        }
+
+        // Return rental details
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Rentals retrieved successfully',
+            'data' => $rentals
+        ]);
+    }
 }
