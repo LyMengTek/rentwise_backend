@@ -81,14 +81,25 @@ class LandlordConfigurationController extends Controller
             // Commit transaction
             DB::commit();
 
-            // Return success response
+            $roomTypes = array_map(function($roomType) {
+                return $roomType->type;
+            }, $savedRoomTypes);
+            
+            $rooms = [];
+            foreach ($savedFloors as $floor) {
+                for ($i = 1; $i <= $floor->room; $i++) {
+                    $rooms[] = [
+                        'floor' => $floor->floor,
+                        'room' => $i
+                    ];
+                }
+            }
+            
             return response()->json([
                 'success' => true,
-                'message' => 'Landlord configurations saved successfully',
                 'data' => [
-                    'utility_prices' => $utilityPrice,
-                    'floors' => $savedFloors,
-                    'room_types' => $savedRoomTypes,
+                    'room_types' => $roomTypes,
+                    'rooms' => $rooms
                 ]
             ], 201);
 
