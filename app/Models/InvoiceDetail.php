@@ -81,11 +81,6 @@ class InvoiceDetail extends Model
         return null;
     }
 
-    public function rental()
-    {
-        return $this->belongsTo(RentalDetail::class, 'rental_id');
-    }
-
     public function landlord()
     {
         return $this->belongsTo(UserDetail::class, 'landlord_id');
@@ -94,5 +89,10 @@ class InvoiceDetail extends Model
     public function renter()
     {
         return $this->belongsTo(UserDetail::class, 'renter_id');
+    }
+
+    public function rental()
+    {
+        return $this->belongsTo(RentalDetail::class, 'rental_id');
     }
 }

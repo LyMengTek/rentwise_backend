@@ -26,4 +26,9 @@ class RoomTypePrice extends Model
     {
         return $this->hasMany(RoomDetail::class, 'room_type');
     }
+
+    public function rentalDetails()
+    {
+        return $this->hasMany(RentalDetail::class, 'room_type_price_id');
+    }
 }

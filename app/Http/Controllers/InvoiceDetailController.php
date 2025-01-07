@@ -53,76 +53,86 @@ class InvoiceDetailController extends Controller
     }
 
     public function getByRenterId($renterId, Request $request)
-    {
-        try {
-            $sortBy = $request->query('sort_by', 'created_at'); // Default sort by 'created_at'
-            $sortOrder = $request->query('sort_order', 'desc'); // Default sort order 'desc'
-            $perPage = $request->query('per_page', 15); // Default items per page
-    
-            // Build the query
-            $query = InvoiceDetail::with(['rental.room', 'rental.landlord', 'rental.renter']);
-    
-            if ($renterId !== null) {
-                $query->whereHas('rental', function ($q) use ($renterId) {
-                    $q->where('renter_id', $renterId);
-                });
-            }
-    
-            // Apply sorting
-            $query->orderBy($sortBy, $sortOrder);
-    
-            // Execute the query with pagination
-            $invoiceDetails = $query->paginate($perPage);
-    
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Invoice details retrieved successfully',
-                'data' => $invoiceDetails
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'An error occurred while retrieving invoice details',
-                'error' => $e->getMessage()
-            ], 500);
+{
+    try {
+        $sortBy = $request->query('sort_by', 'created_at'); // Default sort by 'created_at'
+        $sortOrder = $request->query('sort_order', 'desc'); // Default sort order 'desc'
+
+        // Build the query
+        $query = InvoiceDetail::with([
+            'rental.room', 
+            'rental.landlord', 
+            'rental.renter', 
+            'rental.utilityUsage', 
+            'rental.room.utilityPrice'
+        ]);
+
+        if ($renterId !== null) {
+            $query->whereHas('rental', function ($q) use ($renterId) {
+                $q->where('renter_id', $renterId);
+            });
         }
+
+        // Apply sorting
+        $query->orderBy($sortBy, $sortOrder);
+
+        // Execute the query
+        $invoiceDetails = $query->get();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Invoice details retrieved successfully',
+            'data' => $invoiceDetails
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'An error occurred while retrieving invoice details',
+            'error' => $e->getMessage()
+        ], 500);
     }
+}
     
     public function getByLandlordId($landlordId, Request $request)
-    {
-        try {
-            $sortBy = $request->query('sort_by', 'created_at'); // Default sort by 'created_at'
-            $sortOrder = $request->query('sort_order', 'desc'); // Default sort order 'desc'
-            $perPage = $request->query('per_page', 15); // Default items per page
-    
-            // Build the query
-            $query = InvoiceDetail::with(['rental.room', 'rental.landlord', 'rental.renter']);
-    
-            if ($landlordId !== null) {
-                $query->whereHas('rental', function ($q) use ($landlordId) {
-                    $q->where('landlord_id', $landlordId);
-                });
-            }
-    
-            // Apply sorting
-            $query->orderBy($sortBy, $sortOrder);
-    
-            // Execute the query with pagination
-            $invoiceDetails = $query->paginate($perPage);
-    
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Invoice details retrieved successfully',
-                'data' => $invoiceDetails
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'An error occurred while retrieving invoice details',
-                'error' => $e->getMessage()
-            ], 500);
+{
+    try {
+        $sortBy = $request->query('sort_by', 'created_at'); // Default sort by 'created_at'
+        $sortOrder = $request->query('sort_order', 'desc'); // Default sort order 'desc'
+
+        // Build the query
+        $query = InvoiceDetail::with([
+            'rental.room', 
+            'rental.landlord', 
+            'rental.renter', 
+            'rental.utilityUsage', 
+            'rental.room.utilityPrice'
+        ]);
+
+        if ($landlordId !== null) {
+            $query->whereHas('rental', function ($q) use ($landlordId) {
+                $q->where('landlord_id', $landlordId);
+            });
         }
+
+        // Apply sorting
+        $query->orderBy($sortBy, $sortOrder);
+
+        // Execute the query
+        $invoiceDetails = $query->get();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Invoice details retrieved successfully',
+            'data' => $invoiceDetails
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'An error occurred while retrieving invoice details',
+            'error' => $e->getMessage()
+        ], 500);
     }
+}
 
 
     /**

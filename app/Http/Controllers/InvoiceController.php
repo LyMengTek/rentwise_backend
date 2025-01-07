@@ -76,6 +76,8 @@ class InvoiceController extends Controller
         // Create invoice
         $invoice = InvoiceDetail::create([
             'rental_id' => $rentalId,
+            'landlord_id' => $rental->landlord_id, // Include landlord_id
+            'renter_id' => $rental->renter_id, // Include renter_id
             'amount_due' => $totalCost,
             'due_date' => now()->addDays(30), // Set due date to 30 days from now
             'paid' => false,

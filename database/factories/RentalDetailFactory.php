@@ -35,4 +35,5 @@ class RentalDetailFactory extends Factory
             'is_active' => $this->faker->boolean,
         ];
     }
+    
 }

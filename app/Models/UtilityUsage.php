@@ -79,4 +79,9 @@ class UtilityUsage extends Model
             'other' => '$' . number_format($this->other, 2),
         ];
     }
+
+    public function rentalDetail()
+    {
+        return $this->belongsTo(RentalDetail::class, 'rental_id');
+    }
 }

@@ -32,6 +32,11 @@ class RoomDetail extends Model
         return $this->hasOne(RentalDetail::class, 'room_id');
     }
 
+    public function rentalDetails()
+    {
+        return $this->hasMany(RentalDetail::class, 'room_type_price_id');
+    }
+
     // Scope to get only available rooms
     public function scopeAvailable($query)
     {

@@ -26,8 +26,8 @@ class RentalController extends Controller
             }
 
             return RoomTypePrice::where('landlord_id', $landlordId)
-                                ->where('type', $value)
-                                ->exists();
+                ->where('type', $value)
+                ->exists();
         });
 
         // Validate the request
@@ -57,8 +57,8 @@ class RentalController extends Controller
             foreach ($request->rentals as $rentalData) {
                 // Look up room_type_price_id based on type and landlord_id
                 $roomTypePrice = RoomTypePrice::where('landlord_id', $rentalData['landlord_id'])
-                                            ->where('type', $rentalData['room_type'])
-                                            ->first();
+                    ->where('type', $rentalData['room_type'])
+                    ->first();
 
                 if (!$roomTypePrice) {
                     DB::rollBack();
@@ -133,7 +133,6 @@ class RentalController extends Controller
                 'message' => 'Multiple rental setups completed successfully',
                 'data' => $results
             ], 201);
-
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -162,14 +161,14 @@ class RentalController extends Controller
      *
      * @param int $landlordId
      * @return \Illuminate\Http\JsonResponse
-     */
+     */ 
     public function showRentalsByLandlord($landlordId)
     {
         // Find rentals by landlord ID
         $rentals = RentalDetail::where('landlord_id', $landlordId)
-            ->with(['room', 'utilityUsage', 'roomTypePrice', 'invoices'])
+            ->with(['room', 'utilityUsage', 'roomTypePrice', 'invoices', 'renter'])
             ->get();
-
+    
         // Check if rentals exist
         if ($rentals->isEmpty()) {
             return response()->json([
@@ -178,7 +177,7 @@ class RentalController extends Controller
                 'data' => null
             ], 404);
         }
-
+    
         // Return rental details
         return response()->json([
             'status' => 'success',
