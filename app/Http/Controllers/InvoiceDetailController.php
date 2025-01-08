@@ -8,6 +8,7 @@ use App\Models\UserDetail;
 use App\Models\RoomtypeDetail;
 use App\Models\CurrentUtilityUsage;
 use App\Models\PreviousUtilityUsage;
+use App\Models\RentalDetail;
 use Illuminate\Support\Facades\Validator;
 
 class InvoiceDetailController extends Controller
@@ -53,86 +54,130 @@ class InvoiceDetailController extends Controller
     }
 
     public function getByRenterId($renterId, Request $request)
-{
-    try {
-        $sortBy = $request->query('sort_by', 'created_at'); // Default sort by 'created_at'
-        $sortOrder = $request->query('sort_order', 'desc'); // Default sort order 'desc'
+    {
+        try {
+            $sortBy = $request->query('sort_by', 'created_at'); // Default sort by 'created_at'
+            $sortOrder = $request->query('sort_order', 'desc'); // Default sort order 'desc'
 
-        // Build the query
-        $query = InvoiceDetail::with([
-            'rental.room', 
-            'rental.landlord', 
-            'rental.renter', 
-            'rental.utilityUsage', 
-            'rental.room.utilityPrice'
-        ]);
+            // Build the query
+            $query = InvoiceDetail::with([
+                'rental.room',
+                'rental.landlord',
+                'rental.renter',
+                'rental.utilityUsage',
+                'rental.room.utilityPrice'
+            ]);
 
-        if ($renterId !== null) {
-            $query->whereHas('rental', function ($q) use ($renterId) {
-                $q->where('renter_id', $renterId);
-            });
+            if ($renterId !== null) {
+                $query->whereHas('rental', function ($q) use ($renterId) {
+                    $q->where('renter_id', $renterId);
+                });
+            }
+
+            // Apply sorting
+            $query->orderBy($sortBy, $sortOrder);
+
+            // Execute the query
+            $invoiceDetails = $query->get();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Invoice details retrieved successfully',
+                'data' => $invoiceDetails
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occurred while retrieving invoice details',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        // Apply sorting
-        $query->orderBy($sortBy, $sortOrder);
-
-        // Execute the query
-        $invoiceDetails = $query->get();
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Invoice details retrieved successfully',
-            'data' => $invoiceDetails
-        ]);
-    } catch (\Exception $e) {
-        return response()->json([
-            'status' => 'error',
-            'message' => 'An error occurred while retrieving invoice details',
-            'error' => $e->getMessage()
-        ], 500);
     }
-}
-    
+
     public function getByLandlordId($landlordId, Request $request)
-{
-    try {
-        $sortBy = $request->query('sort_by', 'created_at'); // Default sort by 'created_at'
-        $sortOrder = $request->query('sort_order', 'desc'); // Default sort order 'desc'
+    {
+        try {
+            $sortBy = $request->query('sort_by', 'created_at'); // Default sort by 'created_at'
+            $sortOrder = $request->query('sort_order', 'desc'); // Default sort order 'desc'
 
-        // Build the query
-        $query = InvoiceDetail::with([
-            'rental.room', 
-            'rental.landlord', 
-            'rental.renter', 
-            'rental.utilityUsage', 
-            'rental.room.utilityPrice'
-        ]);
+            // Build the query
+            $query = InvoiceDetail::with([
+                'rental.room',
+                'rental.landlord',
+                'rental.renter',
+                'rental.utilityUsage',
+                'rental.room.utilityPrice'
+            ]);
 
-        if ($landlordId !== null) {
-            $query->whereHas('rental', function ($q) use ($landlordId) {
-                $q->where('landlord_id', $landlordId);
-            });
+            if ($landlordId !== null) {
+                $query->whereHas('rental', function ($q) use ($landlordId) {
+                    $q->where('landlord_id', $landlordId);
+                });
+            }
+
+            // Apply sorting
+            $query->orderBy($sortBy, $sortOrder);
+
+            // Execute the query
+            $invoiceDetails = $query->get();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Invoice details retrieved successfully',
+                'data' => $invoiceDetails
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occurred while retrieving invoice details',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        // Apply sorting
-        $query->orderBy($sortBy, $sortOrder);
-
-        // Execute the query
-        $invoiceDetails = $query->get();
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Invoice details retrieved successfully',
-            'data' => $invoiceDetails
-        ]);
-    } catch (\Exception $e) {
-        return response()->json([
-            'status' => 'error',
-            'message' => 'An error occurred while retrieving invoice details',
-            'error' => $e->getMessage()
-        ], 500);
     }
-}
+
+    public function getContact($landlordId, Request $request)
+    {
+        try {
+            $sortBy = $request->query('sort_by', 'created_at');
+            $sortOrder = $request->query('sort_order', 'desc');
+    
+            // Query RentalDetail directly instead of InvoiceDetail
+            $query = RentalDetail::with([
+                'renter:id,profile_picture,email,phone_number,username'
+            ]);
+    
+            if ($landlordId !== null) {
+                $query->where('landlord_id', $landlordId);
+            }
+    
+            $query->orderBy($sortBy, $sortOrder);
+    
+            // Get rental details and transform the data
+            $renters = $query->get()->map(function ($rental) {
+                return [
+                    'renter_details' => [
+                        'id' => $rental->renter->id,
+                        'name' => $rental->renter->username ?? null,
+                        'email' => $rental->renter->email ?? null,
+                        'phone' => $rental->renter->phone_number ?? null,
+                        'profile_pic' => $rental->renter->profile_picture ?? null
+                    ]
+                ];
+            });
+    
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Renter details retrieved successfully',
+                'data' => $renters
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occurred while retrieving renter details',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 
 
     /**

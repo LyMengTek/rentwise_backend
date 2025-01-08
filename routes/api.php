@@ -38,6 +38,7 @@ Route::Get('invoice', [InvoiceDetailController::class, 'index']);
 Route::Post('create/invoice', [InvoiceDetailController::class, 'store']);
 Route::get('invoice/byRenter/{renter_id}', [InvoiceDetailController::class, 'getByRenterId']);
 Route::get('invoice/byLandlord/{landlord_id}', [InvoiceDetailController::class, 'getByLandlordId']);
+Route::get('contact/byLandlord/{landlord_id}', [InvoiceDetailController::class, 'getContact']);
 
 Route::post('/register', [UserDetailController::class, 'register']);
 Route::get('/user/{id}', [UserDetailController::class, 'showUser']);
