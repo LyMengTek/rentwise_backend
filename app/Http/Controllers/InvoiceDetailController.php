@@ -155,20 +155,18 @@ class InvoiceDetailController extends Controller
             // Get rental details and transform the data
             $renters = $query->get()->map(function ($rental) {
                 return [
-                    'renter_details' => [
-                        'id' => $rental->renter->id,
-                        'name' => $rental->renter->username ?? null,
-                        'email' => $rental->renter->email ?? null,
-                        'phone' => $rental->renter->phone_number ?? null,
-                        'profile_pic' => $rental->renter->profile_picture ?? null
-                    ]
+                    'id' => $rental->renter->id,
+                    'name' => $rental->renter->username ?? null,
+                    'email' => $rental->renter->email ?? null,
+                    'phone' => $rental->renter->phone_number ?? null,
+                    'profile_pic' => $rental->renter->profile_picture ?? null
                 ];
             });
     
             return response()->json([
                 'status' => 'success',
                 'message' => 'Renter details retrieved successfully',
-                'data' => $renters
+                'data' => $renters // Directly return the list of renter_details
             ]);
         } catch (\Exception $e) {
             return response()->json([
