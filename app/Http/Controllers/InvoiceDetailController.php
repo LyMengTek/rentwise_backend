@@ -152,22 +152,31 @@ class InvoiceDetailController extends Controller
     
             $query->orderBy($sortBy, $sortOrder);
     
-            // Get rental details and transform the data
-            $renters = $query->get()->map(function ($rental) {
-                return [
+            // Get the first rental detail
+            $rental = $query->first();
+    
+            if ($rental) {
+                // Transform the data into a single object
+                $renterDetails = [
                     'id' => $rental->renter->id,
                     'name' => $rental->renter->username ?? null,
                     'email' => $rental->renter->email ?? null,
                     'phone' => $rental->renter->phone_number ?? null,
                     'profile_pic' => $rental->renter->profile_picture ?? null
                 ];
-            });
     
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Renter details retrieved successfully',
-                'data' => $renters // Directly return the list of renter_details
-            ]);
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Renter details retrieved successfully',
+                    'data' => $renterDetails // Return a single object
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'No renter details found',
+                    'data' => null
+                ], 404);
+            }
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
