@@ -33,7 +33,7 @@ class LandlordConfigurationController extends Controller
                 // Room types validation
                 'room_types' => 'required|array',
                 'room_types.*.type' => 'required|string',
-                'room_types.*.price' => 'required|integer',
+                'room_types.*.price' => 'required',
             ]);
 
             // Begin transaction

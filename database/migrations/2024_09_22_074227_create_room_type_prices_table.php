@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('landlord_id'); // Add landlord_id
             $table->string('type'); // Room type identifier (e.g., 1 for Studio, 2 for 1 Bedroom, etc.)
-            $table->integer('type_price'); // Price for this room type
+            $table->double('type_price'); // Price for this room type
             $table->timestamps();
 
             // Foreign key constraint
