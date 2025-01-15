@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('utility_price_id')->nullable()->constrained('utility_prices')->onDelete('cascade');
             $table->foreignId('room_type_price_id')->nullable()->constrained('room_type_prices')->onDelete('cascade'); // Make nullable
             $table->foreignId('user_id')->nullable()->constrained('user_details')->onDelete('cascade');
-            $table->string('room_number')->unique();
+            $table->string('room_number');
             $table->text('description');
             $table->boolean('available')->default(true);
             $table->timestamps();

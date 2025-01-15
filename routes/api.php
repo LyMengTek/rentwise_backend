@@ -54,6 +54,7 @@ Route::post('/utillity/create', [UtillityController::class, 'createUtility']);
 Route::post('/utility-usage', [UtilityUsageController::class, 'storeUtility'])->name('utility-usage.storeUtility');
 
 //big 2
+Route::get('/landlord/{landlordId}/rooms', [LandlordConfigurationController::class, 'generateRoomsByLandlordId']);
 Route::post('/rental/setup', [RentalController::class, 'setupCompleteRental']);
 Route::post('/landlord-configurations', [LandlordConfigurationController::class, 'storeLandlordConfigurations']);
 

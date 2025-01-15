@@ -68,10 +68,22 @@ class RentalController extends Controller
                     ], 404);
                 }
 
-                // Check if room is already taken
+                $debugRoom = RoomDetail::where([
+                    'floor' => $rentalData['floor'],
+                    'room_number' => $rentalData['room_number'],
+                ])->first();
+                
+                if ($debugRoom) {
+                    \Log::info('Found room:', [
+                        'room_id' => $debugRoom->id,
+                        'user_id' => $debugRoom->user_id,
+                        'available' => $debugRoom->available
+                    ]);
+                }
                 $existingRoom = RoomDetail::where([
                     'floor' => $rentalData['floor'],
                     'room_number' => $rentalData['room_number'],
+                    'user_id' => $rentalData['landlord_id'],  // Add this line to check specific landlord
                     'available' => false
                 ])->first();
 
